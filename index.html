@@ -577,7 +577,8 @@ const COLORS=['#ffffff','#000000','#ff3058','#ffd000','#00e890','#2d9cff','#c77d
 // ── MAGAZINE TEMPLATES ────────────────────────
 const TEMPLATES=[
   {
-    id:'vogue', name:'VØGUE', label:'Luxury Fashion', spineBg:'linear-gradient(180deg,#0d0008,#2a0020)', spineColor:'#f0c8f0',
+    id:'vogue', name:'VØGUE', label:'Luxury Fashion', spineBg:'linear-gradient(180deg,#0d0008,#2a0020)', spineColor:'#f0c8f0', headerFont:'Playfair Display,serif',
+    aiImg:pollinationsImg('elegant luxury fashion editorial dark purple gold accents minimalist studio'),
     priceBg:'#c9a84c', priceColor:'#0d0008',
     renderMag:(g, photoSrc, captionHtml)=>`
       <div style="width:100%;height:100%;background:#0d0008;display:flex;flex-direction:column;font-family:'Playfair Display',serif;position:relative;overflow:hidden">
@@ -600,7 +601,8 @@ const TEMPLATES=[
       </div>`
   },
   {
-    id:'nike', name:'HYPE', label:'Sports / Hype', spineBg:'#000', spineColor:'#fff',
+    id:'nike', name:'HYPE', label:'Sports / Hype', spineBg:'#000', spineColor:'#fff', headerFont:'Anton,sans-serif',
+    aiImg:pollinationsImg('dynamic sports action black background red dramatic athletic photography'),
     priceBg:'#ff3058', priceColor:'#fff',
     renderMag:(g, photoSrc, captionHtml)=>`
       <div style="width:100%;height:100%;background:#000;display:flex;flex-direction:column;font-family:'Anton',sans-serif;position:relative;overflow:hidden">
@@ -627,7 +629,8 @@ const TEMPLATES=[
       </div>`
   },
   {
-    id:'tabloid', name:'DAILY HYPE', label:'Tabloid Drama', spineBg:'linear-gradient(180deg,#cc0000,#880000)', spineColor:'#fff',
+    id:'tabloid', name:'DAILY HYPE', label:'Tabloid Drama', spineBg:'linear-gradient(180deg,#cc0000,#880000)', spineColor:'#fff', headerFont:'Impact,sans-serif',
+    aiImg:pollinationsImg('dramatic tabloid newspaper white background bold red headline breaking news'),
     priceBg:'#ffd000', priceColor:'#000',
     renderMag:(g, photoSrc, captionHtml)=>`
       <div style="width:100%;height:100%;background:#fff;display:flex;flex-direction:column;font-family:'Impact',sans-serif;position:relative;overflow:hidden;color:#000">
@@ -656,7 +659,8 @@ const TEMPLATES=[
       </div>`
   },
   {
-    id:'apple', name:'THINK.', label:'Tech / Minimal', spineBg:'linear-gradient(180deg,#1c1c2e,#2d2d4e)', spineColor:'#00e890',
+    id:'apple', name:'THINK.', label:'Tech / Minimal', spineBg:'linear-gradient(180deg,#1c1c2e,#2d2d4e)', spineColor:'#00e890', headerFont:'DM Mono,monospace',
+    aiImg:pollinationsImg('minimal technology dark navy background green neon glow futuristic clean'),
     priceBg:'#00e890', priceColor:'#040f0a',
     renderMag:(g, photoSrc, captionHtml)=>`
       <div style="width:100%;height:100%;background:#0a0a12;display:flex;flex-direction:column;font-family:'DM Mono',monospace;position:relative;overflow:hidden">
@@ -678,7 +682,8 @@ const TEMPLATES=[
       </div>`
   },
   {
-    id:'cosmo', name:'GLOSS', label:'Beauty / Cosmetics', spineBg:'linear-gradient(180deg,#ff69b4,#c2185b)', spineColor:'#fff',
+    id:'cosmo', name:'GLOSS', label:'Beauty / Cosmetics', spineBg:'linear-gradient(180deg,#ff69b4,#c2185b)', spineColor:'#fff', headerFont:'Pacifico,cursive',
+    aiImg:pollinationsImg('beauty cosmetics glamour pink sparkle glitter soft lighting feminine editorial'),
     priceBg:'#ff69b4', priceColor:'#fff',
     renderMag:(g, photoSrc, captionHtml)=>`
       <div style="width:100%;height:100%;background:linear-gradient(160deg,#fff0f5,#ffe4f0);display:flex;flex-direction:column;font-family:'Pacifico',cursive;position:relative;overflow:hidden;color:#333">
@@ -700,7 +705,8 @@ const TEMPLATES=[
       </div>`
   },
   {
-    id:'sport', name:'MAXOUT', label:'Sports Science', spineBg:'linear-gradient(180deg,#1a1a2e,#0f3460)', spineColor:'#ffd000',
+    id:'sport', name:'MAXOUT', label:'Sports Science', spineBg:'linear-gradient(180deg,#1a1a2e,#0f3460)', spineColor:'#ffd000', headerFont:'Anton,sans-serif',
+    aiImg:pollinationsImg('extreme sports dark blue background yellow lightning energy athletic performance'),
     priceBg:'#ffd000', priceColor:'#1a1a2e',
     renderMag:(g, photoSrc, captionHtml)=>`
       <div style="width:100%;height:100%;background:#1a1a2e;display:flex;flex-direction:column;font-family:'Anton',sans-serif;position:relative;overflow:hidden">
@@ -962,6 +968,10 @@ function setupProduct(){
     img.onerror=()=>img.remove();
     box.insertBefore(img,box.firstChild);
   }
+  // Build the ad studio UI and canvas
+  setupCanvas();
+  buildStudio();
+  updateCanvas();
 }
 
 // ── TECHNIQUE ─────────────────────────────────
@@ -972,24 +982,92 @@ function pickTech(el,tech){
 }
 
 // ── STUDIO ────────────────────────────────────
-function buildStudio(){
+function buildFonts(){
   const fg=document.getElementById('font-grid');
-  if(fg)fg.innerHTML=FONTS.map((f,i)=>`<div class="font-btn${i===0?' sel':''}" onclick="selFont(this,${i})" style="font-family:${f.css}"><div>${f.sample}</div><div class="fn">${f.lbl}</div></div>`).join('');
+  if(!fg)return;
+  fg.innerHTML='';
+  FONTS.forEach((f,i)=>{
+    const d=document.createElement('div');
+    d.className='font-btn'+(i===0?' sel':'');
+    d.style.fontFamily=f.css;
+    d.onclick=()=>selFont(d,i);
+    d.innerHTML='<div>'+f.sample+'</div><div class="fn">'+f.lbl+'</div>';
+    fg.appendChild(d);
+  });
+}
+function buildEffects(){
   const exg=document.getElementById('fx-grid');
-  if(exg)exg.innerHTML=EFFECTS.map((e,i)=>`<div class="fx-btn${i===0?' sel':''}" onclick="selEffect(this,${i})">${e.lbl}</div>`).join('');
+  if(!exg)return;
+  exg.innerHTML='';
+  EFFECTS.forEach((e,i)=>{
+    const d=document.createElement('div');
+    d.className='fx-btn'+(i===0?' sel':'');
+    d.textContent=e.lbl;
+    d.onclick=()=>selEffect(d,i);
+    exg.appendChild(d);
+  });
+}
+function buildColors(){
   const cg=document.getElementById('clr-grid');
-  if(cg)cg.innerHTML=COLORS.map((c,i)=>`<div class="clr-sw${i===0?' sel':''}" style="background:${c}" onclick="selColor(this,'${c}')"></div>`).join('');
+  if(!cg)return;
+  cg.innerHTML='';
+  COLORS.forEach((c,i)=>{
+    const d=document.createElement('div');
+    d.className='clr-sw'+(i===0?' sel':'');
+    d.style.background=c;
+    d.onclick=()=>selColor(d,c);
+    cg.appendChild(d);
+  });
+}
+function buildTemplates(){
   const tg=document.getElementById('tmpl-grid');
-  if(tg){
-    const g=currentGroup||{id:'A',product:'Product',emoji:'✨',base:0};
-    const sampleCap=`<div style="font-family:Impact,sans-serif;color:#fff;font-size:11px;text-shadow:1px 1px 4px rgba(0,0,0,.9);line-height:1.2">Buy me. You know you want to.</div>`;
-    tg.innerHTML=TEMPLATES.map(t=>`<div class="tmpl-card" id="tmpl-${t.id}" onclick="selTemplate('${t.id}')"><div class="tmpl-preview" style="overflow:hidden;height:100%">${t.renderMag(g,g.img||'',sampleCap)}</div></div>`).join('');
-  }
+  if(!tg)return;
+  tg.innerHTML='';
+  TEMPLATES.forEach(t=>{
+    const card=document.createElement('div');
+    card.className='tmpl-card';
+    card.id='tmpl-'+t.id;
+    card.onclick=()=>selTemplate(t.id);
+    // Simple visual preview — no renderMag to avoid nested backtick crashes
+    const preview=document.createElement('div');
+    preview.style.cssText='flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:120px';
+    preview.style.background=t.canvasBg||t.spineBg;
+    // Load AI image if available
+    if(t.aiImg){
+      const img=document.createElement('img');
+      img.src=t.aiImg;
+      img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6';
+      img.onerror=()=>img.remove();
+      preview.appendChild(img);
+    }
+    // Overlay with magazine name
+    const overlay=document.createElement('div');
+    overlay.style.cssText='position:relative;z-index:2;text-align:center;padding:8px';
+    overlay.innerHTML='<div style="font-family:'+t.headerFont+';font-size:1rem;color:'+t.spineColor+';letter-spacing:3px">'+t.name+'</div>';
+    preview.appendChild(overlay);
+    // Label bar
+    const label=document.createElement('div');
+    label.style.cssText='padding:5px;text-align:center;font-size:.65rem;font-weight:700;background:'+t.priceBg+';color:'+t.priceColor+';text-transform:uppercase;letter-spacing:.05em';
+    label.textContent=t.label;
+    card.appendChild(preview);
+    card.appendChild(label);
+    tg.appendChild(card);
+  });
+}
+function buildStudio(){
+  try { buildFonts(); } catch(e){ console.error('buildFonts error:',e); }
+  try { buildEffects(); } catch(e){ console.error('buildEffects error:',e); }
+  try { buildColors(); } catch(e){ console.error('buildColors error:',e); }
+  try { buildTemplates(); } catch(e){ console.error('buildTemplates error:',e); }
 }
 function switchTab(btn,id){
   document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');document.getElementById(id)?.classList.add('active');
+  // Always rebuild studio when switching tabs so fonts/colors/templates populate
+  if(id==='tab-style'||id==='tab-tmpl'){
+    if(currentGroup) buildStudio();
+  }
 }
 function selFont(el,i){document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');studioState.font=FONTS[i];updateCanvas();}
 function selEffect(el,i){document.querySelectorAll('.fx-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');studioState.effect=EFFECTS[i];updateCanvas();}
@@ -1038,6 +1116,9 @@ function initCapDrag(el){
 function updateCanvas(){
   const canvas=document.getElementById('ad-canvas');
   if(!canvas)return;
+  // Guard: ensure font/effect are initialized
+  if(!studioState.font) studioState.font=FONTS[0];
+  if(!studioState.effect) studioState.effect=EFFECTS[0];
   const t=studioState.template;
   const g=currentGroup||{id:'A',product:'Product',emoji:'✨',base:0,color:'#ff3058'};
 
@@ -1398,11 +1479,13 @@ function go(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
-
-  // 🔥 Fix teacher panel
-  if (id === 's-teacher') {
+  if(id==='s-teacher'){
     enableTeacherButtons();
     renderTeacher(cachedState);
+  }
+  if(id==='s-caption' && currentGroup){
+    // Always rebuild studio when arriving at ad screen
+    setTimeout(()=>{ buildStudio(); updateCanvas(); }, 50);
   }
 }
 buildGroupGrid();
