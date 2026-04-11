@@ -122,9 +122,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .stab{padding:8px 3px;border:none;background:transparent;color:var(--muted);font-family:var(--font-b);font-size:.7rem;font-weight:600;cursor:pointer;border-radius:6px;transition:all .15s;white-space:nowrap}
 .stab.active{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(255,48,88,.4)}
 .tab-panel{display:none}.tab-panel.active{display:block}
-.tips-row{display:flex;flex-wrap:wrap;gap:5px}
-.tip-pill{background:var(--s3);border:1px solid var(--border2);border-radius:4px;padding:5px 9px;font-size:.7rem;color:var(--muted);cursor:pointer;transition:all .15s;line-height:1.4}
-.tip-pill:hover{border-color:var(--yellow);color:var(--yellow);background:rgba(255,208,0,.07)}
+
 .font-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .font-btn{padding:10px 11px;border:2px solid var(--border);border-radius:var(--r-sm);background:var(--s2);cursor:pointer;text-align:center;transition:all .15s;color:var(--text);font-size:1rem}
 .font-btn:hover{border-color:var(--border2)}.font-btn.sel{border-color:var(--yellow);background:rgba(255,208,0,.07)}
@@ -175,7 +173,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .mag-spine.own-ad{opacity:.45;cursor:not-allowed;filter:grayscale(.6)}
 .mag-spine.voted{outline:3px solid var(--green);outline-offset:2px}
 .mag-spine-title{font-size:.56rem;font-weight:700;text-align:center;padding:0 4px;line-height:1.2;text-transform:uppercase;letter-spacing:.04em;word-break:break-word}
-.mag-spine-product{font-size:1.5rem;margin-top:6px}
+.mag-spine-product{display:none}
 .mag-spine-group{position:absolute;bottom:5px;font-size:.52rem;opacity:.65;font-family:var(--font-b)}
 .mag-spine-own-tag{position:absolute;top:4px;right:3px;font-size:.5rem;background:rgba(0,0,0,.55);padding:1px 4px;border-radius:3px;color:#fff}
 
@@ -345,8 +343,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
     <label class="lbl">Your slogan / caption</label>
     <textarea class="inp-ta" id="cap-inp" placeholder="e.g. Only 3 left in Korea. Your loss if you don't buy." maxlength="160" oninput="onCapInput()"></textarea>
     <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:4px"><span>Punchy. Dramatic. Legendary.</span><span><span id="char-cnt">0</span>/160</span></div>
-    <div style="height:12px"></div>
-    <div class="inset"><div class="lbl" style="margin-bottom:7px">💡 Tap for inspo</div><div class="tips-row" id="tips-row"></div></div>
+
   </div>
 
   <div class="tab-panel" id="tab-style">
@@ -516,16 +513,16 @@ let sessionRef = null;
 let unsubscribe = null;
 let cachedState = { phase:'work', ads:{}, votes:{}, members:{} };
 let currentGroup = null, currentName = null, voterKey = null;
-let selectedTech = null, myVote = null, isAdWriter = false;
+let selectedTech = null, myVote = null, myVotes = {}, isAdWriter = false;
 let studioState = { font:null, effect:null, color:'#ffffff', fontSize:18, align:'left', template:null, capX:null, capY:null };
 
 // ── DATA ──────────────────────────────────────
 const GROUPS=[
-  {id:'A',name:'Group A',product:'Plain White Socks',emoji:'🧦',base:1500,color:'#ff3058',img:'https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=600&q=80'},
-  {id:'B',name:'Group B',product:'Tissue Box',emoji:'🤧',base:1200,color:'#ffd000',img:'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=600&q=80'},
-  {id:'C',name:'Group C',product:'Rubber Gloves',emoji:'🧤',base:2000,color:'#00e890',img:'https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=600&q=80'},
-  {id:'D',name:'Group D',product:'Sticky Notes',emoji:'📝',base:1500,color:'#2d9cff',img:'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=600&q=80'},
-  {id:'E',name:'Group E',product:'Scissors',emoji:'✂️',base:2500,color:'#c77dff',img:'https://images.unsplash.com/photo-1603015269169-225ed22168f4?w=600&q=80'},
+  {id:'A',name:'Group A',product:'Plain White Socks',emoji:'🧦',base:1500,color:'#ff3058',img:'https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/332431s.jpg?im=Resize,width=750'},
+  {id:'B',name:'Group B',product:'Tissue Box',emoji:'🤧',base:1200,color:'#ffd000',img:'https://www.stanleypackaging.com.au/wp-content/uploads/2023/08/SPF2180-1.jpg'},
+  {id:'C',name:'Group C',product:'Rubber Gloves',emoji:'🧤',base:2000,color:'#00e890',img:'https://s7e5a.scene7.com/is/image/medi/Gummihandschuhe-MG-3776_66700_1?$Product-medical-2to3$&wid=420&hei=630'},
+  {id:'D',name:'Group D',product:'Sticky Notes',emoji:'📝',base:1500,color:'#2d9cff',img:'https://thefullstop.lk/wp-content/uploads/2022/08/751110.jpg'},
+  {id:'E',name:'Group E',product:'Scissors',emoji:'✂️',base:2500,color:'#c77dff',img:'https://m.media-amazon.com/images/I/61pnsnr+qBL._AC_UF894,1000_QL80_.jpg'},
 ];
 const TECH_LABELS={scarcity:'⏳ Scarcity',authority:'🏆 Authority',social_proof:'💬 Social Proof'};
 const MEDALS=['🥇','🥈','🥉','4️⃣','5️⃣'];
@@ -740,12 +737,7 @@ const TEMPLATES=[
   },
 ];
 
-// ── TIPS ──────────────────────────────────────
-const TIPS={
-  scarcity:["Only 3 left in all of Korea!","Selling out in 10 min — don't sleep","Last chance. Gone by Friday.","Limited edition. Very limited.","Stock: critically low. Regret: very high.","After this, it's gone. Forever."],
-  authority:["Recommended by 9/10 professionals","Winner: Best Product of the Year","Certified by people who know stuff","As seen in every top magazine","Scientists agree this slaps","#1 trusted brand in its category"],
-  social_proof:["50,000 happy customers can't be wrong","Everyone in class already wants one","Your friends have it. Do you?","5 stars from people with great taste","Trending #1 on everyone's wish list","Going viral. Seriously."],
-};
+
 
 // ── STATE ─────────────────────────────────────
 
@@ -867,7 +859,7 @@ function selGroup(id){selGid=id;document.querySelectorAll('.grp-btn').forEach(b=
 function joinGroup(){
   if(!selGid)return;
   // Reset all per-student state when starting fresh
-  myVote=null; voterKey=null; currentName=null; selectedTech=null; isAdWriter=false;
+  myVote=null; myVotes={}; voterKey=null; currentName=null; selectedTech=null; isAdWriter=false;
   currentGroup=GROUPS.find(g=>g.id===selGid);
   document.getElementById('name-badge').textContent=currentGroup.name.toUpperCase();
   // Clear name input
@@ -881,6 +873,7 @@ function checkName(){document.getElementById('btn-name').disabled=document.getEl
 async function confirmName(){
   // Reset per-student state — critical if same tablet used by multiple students
   myVote = null;
+  myVotes = {};
   currentName=document.getElementById('name-inp').value.trim();
   voterKey=currentGroup.id+'_'+currentName.replace(/\s+/g,'_')+'_'+Math.random().toString(36).slice(2,5);
 
@@ -906,9 +899,6 @@ async function confirmName(){
 
   // If voting is open — ALL students go to vote, no matter what
   if(freshState.phase === 'vote'){
-    if(!myVote && freshState.votes && freshState.votes[voterKey]){
-      myVote = freshState.votes[voterKey].groupId;
-    }
     buildShelf(); go('s-vote'); return;
   }
 
@@ -953,15 +943,22 @@ function setupProduct(){
   document.getElementById('prod-emoji-big').textContent=g.emoji;
   document.getElementById('prod-price-pill').textContent=fmt(g.base);
   const box=document.getElementById('prod-photo-box');
-  if(g.img){const img=document.createElement('img');img.src=g.img;img.style.cssText='width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:0';img.onerror=()=>img.remove();box.insertBefore(img,box.firstChild);}
-  setupCanvas();buildStudio();buildTips();updateCanvas();
+  // Hide emoji when image loads
+  if(g.img){
+    const img=document.createElement('img');
+    img.src=g.img;
+    img.style.cssText='width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:1';
+    img.onload=()=>{ document.getElementById('prod-emoji-big').style.display='none'; };
+    img.onerror=()=>img.remove();
+    box.insertBefore(img,box.firstChild);
+  }
 }
 
 // ── TECHNIQUE ─────────────────────────────────
 function pickTech(el,tech){
   selectedTech=tech;
   document.querySelectorAll('.tech-card').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');document.getElementById('btn-tech').disabled=false;buildTips();
+  el.classList.add('sel');document.getElementById('btn-tech').disabled=false;
 }
 
 // ── STUDIO ────────────────────────────────────
@@ -976,20 +973,13 @@ function buildStudio(){
   if(tg){
     const g=currentGroup||{id:'A',product:'Product',emoji:'✨',base:0};
     const sampleCap=`<div style="font-family:Impact,sans-serif;color:#fff;font-size:11px;text-shadow:1px 1px 4px rgba(0,0,0,.9);line-height:1.2">Buy me. You know you want to.</div>`;
-    tg.innerHTML=TEMPLATES.map(t=>`<div class="tmpl-card" id="tmpl-${t.id}" onclick="selTemplate('${t.id}')"><div class="tmpl-preview" style="overflow:hidden;height:100%">${t.renderMag(g,'',sampleCap)}</div></div>`).join('');
+    tg.innerHTML=TEMPLATES.map(t=>`<div class="tmpl-card" id="tmpl-${t.id}" onclick="selTemplate('${t.id}')"><div class="tmpl-preview" style="overflow:hidden;height:100%">${t.renderMag(g,g.img||'',sampleCap)}</div></div>`).join('');
   }
 }
-function buildTips(){
-  const row=document.getElementById('tips-row');if(!row)return;
-  const tips=(selectedTech&&TIPS[selectedTech])||TIPS.scarcity;
-  row.innerHTML=tips.map(t=>`<div class="tip-pill" onclick="useTip('${t.replace(/'/g,"\\'")}')">${t}</div>`).join('');
-}
-function useTip(txt){const el=document.getElementById('cap-inp');if(el){el.value=txt;el.dispatchEvent(new Event('input'));}}
-function switchTab(btn,id){
   document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');document.getElementById(id)?.classList.add('active');
-  if(id==='tab-cap')buildTips();
+  
 }
 function selFont(el,i){document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');studioState.font=FONTS[i];updateCanvas();}
 function selEffect(el,i){document.querySelectorAll('.fx-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');studioState.effect=EFFECTS[i];updateCanvas();}
@@ -1135,6 +1125,9 @@ async function submitAd(){
   const caption=document.getElementById('cap-inp').value.trim();
   if(!caption){showToast('⚠️ Write a caption first!');return;}
   if(!selectedTech){showToast('⚠️ Choose a technique first!');return;}
+  // Warn if caption is a raw unedited tip
+    if(!confirm('⚠️ Your caption looks like an unedited example.\nThe class will recognise it!\n\nSubmit anyway?')) return;
+  }
   const pct=parseInt(document.getElementById('price-slider').value),price=Math.round(currentGroup.base*(1+pct/100));
   const t=studioState.template;
   const ad={groupId:currentGroup.id,groupName:currentGroup.name,product:currentGroup.product,emoji:currentGroup.emoji,caption,technique:selectedTech,price,base:currentGroup.base,img:currentGroup.img||null,
@@ -1146,15 +1139,22 @@ async function submitAd(){
 function buildShelf(){
   const state=cachedState,row=document.getElementById('shelf-row');
   if(!row)return;row.innerHTML='';
-  // Restore myVote from Firebase if this student already voted
-  // (handles page refresh, or coming back after submitting)
-  if(!myVote && voterKey && state.votes && state.votes[voterKey]){
-    myVote = state.votes[voterKey].groupId;
+  // Restore myVotes from Firebase (handles page refresh)
+  if(voterKey && state.votes){
+    Object.keys(state.votes).forEach(key => {
+      if(key.startsWith(voterKey + '_')){
+        const gid = key.replace(voterKey + '_', '');
+        myVotes[gid] = state.votes[key].bought;
+      }
+    });
   }
+  const allRated = currentGroup ?
+    GROUPS.filter(g => g.id !== currentGroup.id).every(g => myVotes.hasOwnProperty(g.id))
+    : false;
   GROUPS.forEach(g=>{
     const ad=state.ads&&state.ads[g.id];
     const isOwn=currentGroup&&g.id===currentGroup.id;
-    const voted=myVote===g.id;
+    const voted=myVotes.hasOwnProperty(g.id);
     const spine=document.createElement('div');
     spine.className='mag-spine'+(isOwn?' own-ad':'')+(voted?' voted':'');
     const tmpl=ad?.style?.templateId?TEMPLATES.find(t=>t.id===ad.style.templateId):null;
@@ -1162,7 +1162,7 @@ function buildShelf(){
     const spineColor=tmpl?tmpl.spineColor:'#fff';
     spine.style.cssText=`background:${spineBg};color:${spineColor}`;
     if(ad){
-      spine.innerHTML=`${isOwn?'<div class="mag-spine-own-tag">YOURS</div>':''}<div class="mag-spine-title" style="color:${spineColor}">${tmpl?tmpl.name:g.product}</div><div class="mag-spine-product">${g.emoji}</div><div class="mag-spine-group" style="color:${spineColor}80">${g.name}</div>`;
+      spine.innerHTML=`${isOwn?'<div class="mag-spine-own-tag">YOURS</div>':''}<div class="mag-spine-title" style="color:${spineColor}">${tmpl?tmpl.name:g.product}</div><div class="mag-spine-group" style="color:${spineColor}80;margin-top:auto">${g.name}</div>`;
       if(!isOwn)spine.onclick=()=>openMag(g.id);
     }else{
       spine.innerHTML=`<div style="font-size:.58rem;opacity:.35;text-align:center;padding:4px;line-height:1.3">waiting…</div>`;
@@ -1170,7 +1170,12 @@ function buildShelf(){
     row.appendChild(spine);
   });
   const vs=document.getElementById('vote-status');
-  if(vs){if(myVote)vs.textContent='✅ Vote cast! Waiting for results...';else vs.textContent='📖 Pick up a magazine. Read the ad. Judge ruthlessly.';}
+  if(vs){
+    const notOwn = currentGroup ? GROUPS.filter(g=>g.id!==currentGroup.id) : GROUPS;
+    const rated = notOwn.filter(g=>myVotes.hasOwnProperty(g.id)).length;
+    if(allRated) vs.textContent='✅ All rated! Waiting for results...';
+    else vs.textContent=`📖 Rate each ad honestly — ${rated}/${notOwn.length} done`;
+  }
 }
 
 function openMag(groupId){
@@ -1205,39 +1210,64 @@ function openMag(groupId){
   }
 
   const actions=document.getElementById('mag-modal-actions');
-  const hasVoted=!!myVote,isOwn=currentGroup&&groupId===currentGroup.id;
-  if(hasVoted||isOwn){
-    actions.innerHTML=`<div style="flex:1;text-align:center;font-size:.83rem;color:var(--muted)">${isOwn?"This is your group's ad 👀":myVote===groupId?'✅ You voted for this!':'You already voted.'}</div>`;
-  }else{
-    actions.innerHTML=`<button class="btn btn-ghost" style="flex:1;font-size:1rem" onclick="closeMagModal()">Skip ➡️</button><button class="btn btn-g" style="flex:1.5;font-size:1.1rem" onclick="castVote('${groupId}')">BUY THIS 💸</button>`;
+  const isOwn=currentGroup&&groupId===currentGroup.id;
+  const alreadyRated=myVotes.hasOwnProperty(groupId);
+  if(isOwn){
+    actions.innerHTML=`<div style="flex:1;text-align:center;font-size:.85rem;color:var(--muted)">👀 This is your group's ad</div>`;
+  } else if(alreadyRated){
+    const didBuy=myVotes[groupId];
+    actions.innerHTML=`<div style="flex:1;text-align:center;font-size:.85rem;color:var(--muted)">${didBuy?'✅ You chose BUY':'❌ You chose NOT BUY'} — <span style="cursor:pointer;text-decoration:underline;color:var(--yellow)" onclick="unrate('${groupId}')">change?</span></div>`;
+  } else {
+    actions.innerHTML=`
+      <button class="btn btn-ghost" style="flex:1;font-size:1rem;padding:12px 8px" onclick="castVote('${groupId}',false)">❌ NOT BUY</button>
+      <button class="btn btn-g" style="flex:1.5;font-size:1.1rem;padding:12px 8px" onclick="castVote('${groupId}',true)">💸 BUY!</button>
+    `;
   }
   document.getElementById('mag-modal').style.display='flex';
 }
 function closeMagModal(){document.getElementById('mag-modal').style.display='none';}
-async function castVote(groupId){
-  if(myVote)return;myVote=groupId;
-  await fbSet('session/votes/'+voterKey,{voter:currentName,groupId});
-  closeMagModal();showToast('Vote cast! 🗳️');buildShelf();
+async function castVote(groupId, bought){
+  myVotes[groupId] = bought;
+  await fbSet('session/votes/'+voterKey+'_'+groupId, {voter:currentName, groupId, bought});
+  closeMagModal();
+  showToast(bought ? 'BUY! 💸' : 'Not buying that. ❌');
+  buildShelf();
+}
+function unrate(groupId){
+  delete myVotes[groupId];
+  openMag(groupId);
 }
 
 // ── RESULTS ───────────────────────────────────
 function showResults(state){
   state=state||cachedState;
   const counts={};GROUPS.forEach(g=>counts[g.id]=0);
-  if(state.votes)Object.values(state.votes).forEach(v=>{if(counts[v.groupId]!==undefined)counts[v.groupId]++;});
+  if(state.votes)Object.values(state.votes).forEach(v=>{
+    if(v.bought && counts[v.groupId]!==undefined) counts[v.groupId]++;
+  });
   const sorted=GROUPS.filter(g=>state.ads&&state.ads[g.id]).map(g=>({...g,votes:counts[g.id],ad:state.ads[g.id]})).sort((a,b)=>b.votes-a.votes);
   const maxV=sorted[0]?.votes||1;
   const rankClass=['gold','silver','bronze','',''];
   const roasts=[
-    ['🏆 THE GOAT','The class has spoken. This ad? Immaculate. Whoever wrote this caption deserves a marketing degree.','The people chose wisely.'],
-    ['🥈 CLOSE BUT NO CIGAR','Solid effort. Respectable even. But second is just the first loser, and deep down you know it.','Almost iconic.'],
-    ['🥉 BRONZE AGE','Third. Not last, not winning either. The participation trophy of ad competitions.','Could\'ve been worse.'],
-    ['4️⃣ YIKES','Fourth place. Your ad existed. That\'s about the nicest thing we can say right now.','Better luck next time.'],
-    ['5️⃣ BRUTAL','Dead last. The class looked at your ad and collectively said... no. It\'s fine. This is fine. 🔥','We believe in you. Sort of.'],
+    ['🏆 THE GOAT','The class has spoken. This ad? Immaculate. Caption game strong. Someone give this group a marketing deal.','The people chose wisely.'],
+    ['🥈 SO CLOSE','A strong effort. Genuinely respectable. But second place is just the first loser, and deep down you know it.','Almost iconic.'],
+    ['🥉 BRONZE AGE','Third. Not last, not winning. The participation trophy of ad competitions.','Could\'ve been worse.'],
+    ['4️⃣ YIKES','Fourth. Your ad existed. That\'s honestly about the nicest thing we can say right now.','Better luck next time.'],
+    ['5️⃣ BRUTAL','Dead last. The class saw your ad and collectively said... no. It\'s fine. This is fine. 🔥','We believe in you. Sort of.'],
   ];
+  const tieRoasts=[
+    'Nobody could decide. Either all ads were brilliant or all were terrible. Jury is out.',
+    'A tie! Democracy has spoken and it said: everyone equally convincing. Or unconvincing.',
+    'Same votes across the board. Your teacher is going to have a lot to say about this.',
+    'Statistically remarkable. Educationally concerning. A perfect tie.',
+    'It\'s giving... participation trophy energy. Everyone wins. Nobody wins.',
+  ];
+  const allTied = sorted.length > 1 && sorted.every(g => g.votes === sorted[0].votes);
   const list=document.getElementById('results-list');
   list.innerHTML=sorted.map((g,i)=>{
-    const [title,roast,sub]=roasts[i]||roasts[4];
+    const [title,roast,sub] = allTied
+      ? ['🤝 IT\'S A TIE', tieRoasts[i % tieRoasts.length], 'No winner today.']
+      : (roasts[i] || roasts[4]);
     return `<div class="result-card ${rankClass[i]}">
       <div class="rc-top">
         <div class="rc-rank">${MEDALS[i]}</div><div style="font-size:2rem">${g.emoji}</div>
@@ -1267,7 +1297,7 @@ function showResults(state){
   document.getElementById('stat-cards').innerHTML=`
     <div class="stat-card"><span class="stat-icon">💸</span><div class="stat-val">${highestPrice?highestPrice.emoji:''}</div><div class="stat-lbl">Highest price<br><span style="color:var(--text)">${highestPrice?fmt(highestPrice.ad.price):'-'}</span></div></div>
     <div class="stat-card"><span class="stat-icon">📈</span><div class="stat-val">${biggestMarkup?biggestMarkup.emoji:''}</div><div class="stat-lbl">Biggest markup<br><span style="color:var(--text)">${biggestMarkup?'+'+Math.round((biggestMarkup.ad.price-biggestMarkup.ad.base)/biggestMarkup.ad.base*100)+'%':'-'}</span></div></div>
-    <div class="stat-card"><span class="stat-icon">🗳️</span><div class="stat-val" style="font-size:1.8rem">${totalVotes}</div><div class="stat-lbl">Total votes cast</div></div>
+    <div class="stat-card"><span class="stat-icon">🗳️</span><div class="stat-val" style="font-size:1.8rem">${totalVotes}</div><div class="stat-lbl">Total BUYs</div></div>
     <div class="stat-card"><span class="stat-icon">🏆</span><div class="stat-val">${sorted[0]?sorted[0].emoji:''}</div><div class="stat-lbl">Winner<br><span style="color:var(--text)">${sorted[0]?sorted[0].name:'-'}</span></div></div>
   `;
   go('s-results');
@@ -1286,9 +1316,6 @@ function syncView(state){
       if(box){box.style.display='block';document.getElementById('wait-ad-emoji').textContent=ad.emoji||'';document.getElementById('wait-ad-cap').textContent='"'+ad.caption+'"';document.getElementById('wait-ad-tech').textContent=TECH_LABELS[ad.technique]||'';document.getElementById('wait-ad-price').textContent=fmt(ad.price);}
     }
     if(state.phase==='vote'){
-      if(!myVote && voterKey && state.votes && state.votes[voterKey]){
-        myVote = state.votes[voterKey].groupId;
-      }
       buildShelf();go('s-vote');
     }
     if(state.phase==='results')showResults(state);
@@ -1296,16 +1323,12 @@ function syncView(state){
   }
   if(active==='s-vote'){
     // Restore vote state from server before building shelf
-    if(!myVote && voterKey && state.votes && state.votes[voterKey]){
-      myVote = state.votes[voterKey].groupId;
-    }
     buildShelf();
     if(state.phase==='results')showResults(state);
     return;
   }
   if(active==='s-voted'){
     if(state.phase==='results'){showResults(state);return;}
-    if(state.phase==='vote' && !myVote){ buildShelf(); go('s-vote'); return; }
   }
 }
 
@@ -1349,7 +1372,7 @@ async function resetAll(){
   await fbSet('session', {phase:'work',ads:{},votes:{},members:{}});
   cachedState = {phase:'work',ads:{},votes:{},members:{}};
   // Clear all local session state too
-  myVote = null; voterKey = null; currentGroup = null;
+  myVote = null; myVotes = {}; voterKey = null; currentGroup = null;
   currentName = null; selectedTech = null; isAdWriter = false;
   showToast('Session reset ✓');
   renderTeacher(cachedState);
