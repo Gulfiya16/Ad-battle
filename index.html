@@ -84,9 +84,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 
 /* LANDING */
 #s-landing{padding:0;max-width:100%}
-.land-bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--bg)}
+.land-bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--bg);pointer-events:none;}
 .land-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(8,8,16,.3) 0%,rgba(8,8,16,.72) 55%,rgba(8,8,16,.97) 100%);pointer-events:none}
-.land-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px 20px;text-align:center;max-width:520px;margin:0 auto}
+.land-content{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px 20px;text-align:center;max-width:520px;margin:0 auto}
 .land-title{font-family:var(--font-h);font-size:clamp(4rem,16vw,7rem);line-height:.85;letter-spacing:2px;text-shadow:0 0 80px rgba(255,48,88,.5),0 0 160px rgba(255,48,88,.2)}
 .land-sub{font-size:.95rem;color:rgba(240,240,250,.7);line-height:1.65;margin:12px 0 6px}
 .ticker{overflow:hidden;white-space:nowrap;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:7px 0;margin:14px 0}
@@ -117,7 +117,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .tech-eg{font-size:.72rem;color:var(--yellow);margin-top:4px;font-style:italic}
 
 /* STUDIO TABS */
-.s-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--s2);padding:4px;border-radius:var(--r-sm);border:1px solid var(--border)}
+.s-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--s2);padding:4px;border-radius:var(--r-sm);border:1px solid var(--border)}
 .stab{padding:8px 3px;border:none;background:transparent;color:var(--muted);font-family:var(--font-b);font-size:.7rem;font-weight:600;cursor:pointer;border-radius:6px;transition:all .15s;white-space:nowrap}
 .stab.active{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(255,48,88,.4)}
 .tab-panel{display:none}.tab-panel.active{display:block}
@@ -137,12 +137,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .align-btn.sel{border-color:var(--yellow);color:var(--yellow);background:rgba(255,208,0,.07)}
 
 /* TEMPLATES */
-.tmpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tmpl-card{border:2px solid var(--border);border-radius:var(--r-md);overflow:hidden;cursor:pointer;transition:all .18s;aspect-ratio:.7;position:relative;display:flex;flex-direction:column}
-.tmpl-card:hover{transform:translateY(-3px) rotate(.5deg);box-shadow:0 12px 30px rgba(0,0,0,.5)}
-.tmpl-card.sel{border-color:var(--yellow);box-shadow:0 0 24px rgba(255,208,0,.3)}
-.tmpl-preview{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.tmpl-label-bar{padding:7px 10px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;text-align:center}
+
 
 /* AD CANVAS */
 .ad-canvas{width:100%;aspect-ratio:.75;border-radius:var(--r-md);overflow:hidden;position:relative;border:2px solid var(--border2);flex-shrink:0}
@@ -220,6 +215,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .phase-btn:hover{border-color:var(--border2);background:var(--s1)}
 .phase-btn.active{border-color:var(--green);background:rgba(0,232,144,.07);color:var(--green)}
 .phase-banner{background:linear-gradient(135deg,rgba(255,48,88,.12),rgba(255,208,0,.1));border:1px solid rgba(255,208,0,.25);border-radius:var(--r-sm);padding:10px 14px;text-align:center;font-family:var(--font-h);font-size:1rem;color:var(--yellow);letter-spacing:.03em}
+
+/* ── BILLBOARD MOCKUP ── */
+.billboard-scene{width:100%;aspect-ratio:16/10;position:relative;border-radius:var(--r-md);overflow:hidden;background:linear-gradient(180deg,#020510 0%,#050b1a 40%,#0a1128 100%);flex-shrink:0}
+.bb-city-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 30% at 20% 110%,rgba(255,120,0,.15) 0%,transparent 70%),radial-gradient(ellipse 40% 20% at 80% 110%,rgba(80,150,255,.12) 0%,transparent 70%);background-color:#0a1535}
+.bb-city-bg::before{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 25% 8%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 40% 20%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 55% 5%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 70% 18%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(2px 2px at 35% 6%,rgba(255,255,200,.9) 0%,transparent 100%),radial-gradient(2px 2px at 75% 22%,rgba(255,255,200,.8) 0%,transparent 100%)}
+.bb-pole{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:3%;height:35%;background:linear-gradient(90deg,#1a1a2e,#2d2d4e,#1a1a2e);border-radius:2px 2px 0 0}
+.bb-arm{position:absolute;bottom:32%;left:46%;width:8%;height:2%;background:linear-gradient(180deg,#2d2d4e,#1a1a2e);border-radius:2px}
+.bb-frame{position:absolute;left:5%;right:5%;top:4%;background:linear-gradient(180deg,#1a1a2e,#111122);border-radius:6px 6px 4px 4px;box-shadow:0 0 0 3px #0d0d1a,0 0 0 5px #2d2d4e,0 20px 60px rgba(0,0,0,.8);padding:5px 5px 3px;display:flex;flex-direction:column;gap:3px}
+.bb-lights-top,.bb-lights-bottom{height:4px;border-radius:2px;background:repeating-linear-gradient(90deg,#ff3058 0px,#ff3058 4px,transparent 4px,transparent 8px,#ffd000 8px,#ffd000 12px,transparent 12px,transparent 16px,#00e890 16px,#00e890 20px,transparent 20px,transparent 24px,#2d9cff 24px,#2d9cff 28px,transparent 28px,transparent 32px);animation:ledScroll 2s linear infinite;flex-shrink:0}
+.bb-lights-bottom{animation-direction:reverse}
+@keyframes ledScroll{from{background-position:0 0}to{background-position:32px 0}}
+.bb-screen{flex:1;position:relative;overflow:hidden;border-radius:3px;background:#000;min-height:0;box-shadow:inset 0 0 20px rgba(0,0,0,.5)}
+.bb-screen .canvas-bg{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
+.bb-screen .canvas-bg img{width:100%;height:100%;object-fit:cover;display:block}
+.bb-screen .canvas-overlay{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 60%)}
+.bb-screen .canvas-caption{position:absolute;bottom:12%;left:5%;right:5%;z-index:5;padding:6px 8px;word-break:break-word;line-height:1.3;cursor:grab;user-select:none;touch-action:none;border:2px dashed transparent;border-radius:4px;transition:border-color .15s;text-shadow:2px 2px 8px rgba(0,0,0,1)}
+.bb-screen .canvas-caption:hover{border-color:rgba(255,255,255,.4)}
+.bb-screen .canvas-caption.dragging{cursor:grabbing;border-color:rgba(255,255,255,.6)}
+.bb-screen .canvas-price{position:absolute;bottom:4%;right:4%;z-index:6;font-family:var(--font-h);font-size:clamp(.7rem,2.5vw,1.1rem);padding:3px 10px;border-radius:3px;box-shadow:0 2px 0 #8a6e00,0 0 12px rgba(255,208,0,.5)}
+.bb-scanlines{position:absolute;inset:0;pointer-events:none;z-index:7;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px)}
+.bb-glare{position:absolute;top:0;left:0;right:0;height:35%;pointer-events:none;z-index:8;background:linear-gradient(160deg,rgba(255,255,255,.06) 0%,transparent 60%);border-radius:2px 2px 0 0}
 </style>
 </head>
 <body>
@@ -328,12 +344,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
   <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
   <div style="height:8px"></div>
   <h2>Ad <span class="ar">Studio 🎨</span></h2>
-  <p class="am small" style="margin-top:3px">Style it. Template it. Price it. Win it.</p>
+  <p class="am small" style="margin-top:3px">Write it. Style it. Price it.</p>
   <div style="height:10px"></div>
   <div class="s-tabs">
     <button class="stab active" onclick="switchTab(this,'tab-cap')">✍️ Caption</button>
     <button class="stab" onclick="switchTab(this,'tab-style')">🎨 Style</button>
-    <button class="stab" onclick="switchTab(this,'tab-tmpl')">📰 Template</button>
+    
     <button class="stab" onclick="switchTab(this,'tab-price')">💸 Price</button>
   </div>
 
@@ -367,13 +383,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
     </div>
   </div>
 
-  <div class="tab-panel" id="tab-tmpl">
-    <div style="height:11px"></div>
-    <label class="lbl">Pick your magazine</label>
-    <div class="tmpl-grid" id="tmpl-grid"></div>
-    <div style="height:8px"></div>
-    <p class="am" style="font-size:.72rem;text-align:center">Select a template to transform the preview below ↓</p>
-  </div>
+
 
   <div class="tab-panel" id="tab-price">
     <div style="height:11px"></div>
@@ -391,14 +401,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
   </div>
 
   <div style="height:13px"></div>
-  <label class="lbl">Live preview <span style="color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400">(drag caption to move it)</span></label>
-  <div class="ad-canvas" id="ad-canvas">
-    <div class="canvas-bg" id="canvas-bg"><span id="canvas-emoji" style="font-size:5rem"></span></div>
-    <div class="canvas-overlay" id="canvas-overlay"></div>
-    <div class="canvas-mag-header" id="canvas-header"></div>
-    <div class="canvas-mag-footer" id="canvas-footer"></div>
-    <div class="canvas-caption" id="canvas-cap" style="bottom:44px;left:12px;right:12px;text-shadow:1px 1px 6px rgba(0,0,0,.8)">Your caption will appear here...</div>
-    <div class="canvas-price" id="canvas-price" style="background:var(--yellow);color:#111">1,200₩</div>
+  <label class="lbl">Live billboard preview</label>
+
+  <!-- BILLBOARD MOCKUP -->
+  <div class="billboard-scene" id="billboard-scene">
+    <!-- City night background -->
+    <div class="bb-city-bg"></div>
+    <!-- Billboard structure -->
+    <div class="bb-pole"></div>
+    <div class="bb-arm"></div>
+    <div class="bb-frame">
+      <div class="bb-lights-top"></div>
+      <div class="bb-screen" id="ad-canvas">
+        <!-- Ad content inside screen -->
+        <div class="canvas-bg" id="canvas-bg"></div>
+        <div class="canvas-overlay" id="canvas-overlay"></div>
+        <div class="canvas-caption" id="canvas-cap">Your caption will appear here...</div>
+        <div class="canvas-price" id="canvas-price" style="background:var(--yellow);color:#111">1,200₩</div>
+        <!-- LED scanline effect -->
+        <div class="bb-scanlines"></div>
+        <!-- Screen glare -->
+        <div class="bb-glare"></div>
+      </div>
+      <div class="bb-lights-bottom"></div>
+    </div>
   </div>
   <div style="height:14px"></div>
   <button class="btn btn-y btn-full" onclick="submitAd()">YEET this ad into the world 🚀</button>
@@ -575,191 +601,7 @@ studioState.effect = EFFECTS[0];
 const COLORS=['#ffffff','#000000','#ff3058','#ffd000','#00e890','#2d9cff','#c77dff','#ff7a30','#ff69b4','#00ffff','#7fff00','#ff1493','#ffa500','#adff2f','#1e90ff','#dc143c'];
 
 // ── MAGAZINE TEMPLATES ────────────────────────
-const TEMPLATES=[
-  // ── 1. VOGUE LUXURY ──────────────────────────────────────────────
-  {
-    id:'vogue', name:'VØGUE', label:'Luxury Fashion',
-    spineBg:'linear-gradient(180deg,#0d0008,#2a0020)', spineColor:'#f0c8f0',
-    headerFont:'Playfair Display,serif',
-    priceBg:'#c9a84c', priceColor:'#0d0008',
-    aiImg:pollinationsImg('elegant luxury fashion editorial dark purple gold minimalist studio'),
-    renderMag(g,src,capHtml){
-      return '<div style="width:100%;height:100%;background:#faf6f0;display:flex;flex-direction:column;font-family:Georgia,serif;position:relative;overflow:hidden;color:#1a1a1a">'+
-        // Top masthead
-        '<div style="padding:5px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #c9a84c">'+
-          '<span style="font-size:.45rem;color:#999;letter-spacing:3px">SEPTEMBER 2025</span>'+
-          '<span style="font-family:\'Playfair Display\',serif;font-size:1.4rem;color:#1a1a1a;letter-spacing:5px">VØGUE</span>'+
-          '<span style="font-size:.45rem;color:#999;letter-spacing:3px">₩'+g.base.toLocaleString('ko-KR')+'</span>'+
-        '</div>'+
-        // Full photo
-        '<div style="flex:1;position:relative;overflow:hidden;min-height:0">'+
-          (src?'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block">':'<div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:4rem">'+g.emoji+'</div>')+
-          '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,0,8,.85) 0%,rgba(10,0,8,.1) 50%,transparent 100%)"></div>'+
-          '<div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px">'+
-            '<div style="font-size:.45rem;color:#c9a84c;letter-spacing:4px;margin-bottom:4px">EXCLUSIVE</div>'+
-            capHtml+
-          '</div>'+
-        '</div>'+
-        // Footer bar
-        '<div style="background:#1a1a1a;padding:5px 10px;display:flex;justify-content:space-between;align-items:center">'+
-          '<span style="font-size:.45rem;color:#c9a84c;letter-spacing:2px">'+g.product.toUpperCase()+'</span>'+
-          '<span style="font-family:\'Playfair Display\',serif;font-size:.7rem;color:#c9a84c">₩'+Math.round(g.base*1.5).toLocaleString('ko-KR')+'</span>'+
-        '</div>'+
-      '</div>';
-    }
-  },
-  // ── 2. HYPE / NIKE ───────────────────────────────────────────────
-  {
-    id:'nike', name:'HYPE', label:'Sports / Hype',
-    spineBg:'#111', spineColor:'#fff',
-    headerFont:'Impact,sans-serif',
-    priceBg:'#ff3058', priceColor:'#fff',
-    aiImg:pollinationsImg('dynamic sports action black background red dramatic athletic photography'),
-    renderMag(g,src,capHtml){
-      return '<div style="width:100%;height:100%;background:#0a0a0a;display:flex;flex-direction:column;font-family:Impact,sans-serif;position:relative;overflow:hidden;color:#fff">'+
-        // Red stripe top
-        '<div style="height:4px;background:#ff3058;flex-shrink:0"></div>'+
-        '<div style="padding:5px 10px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">'+
-          '<span style="font-size:1.1rem;color:#fff;letter-spacing:3px">HYPE</span>'+
-          '<span style="font-size:.42rem;color:rgba(255,255,255,.4);letter-spacing:3px">MAGAZINE</span>'+
-        '</div>'+
-        '<div style="background:#ff3058;padding:3px 10px;flex-shrink:0">'+
-          '<span style="font-size:.6rem;letter-spacing:1px">JUST BUY IT — '+g.product.toUpperCase()+'</span>'+
-        '</div>'+
-        '<div style="flex:1;position:relative;overflow:hidden;min-height:0">'+
-          (src?'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.15) saturate(1.1)">':'<div style="width:100%;height:100%;background:#222;display:flex;align-items:center;justify-content:center;font-size:4rem">'+g.emoji+'</div>')+
-          '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,transparent 55%)"></div>'+
-          '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px">'+capHtml+'</div>'+
-        '</div>'+
-        '<div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;background:#111;border-top:2px solid #ff3058;flex-shrink:0">'+
-          '<div style="padding:4px 6px;text-align:center"><div style="font-size:.38rem;color:rgba(255,255,255,.4)">BASE</div><div style="font-size:.55rem;color:#ff3058">'+g.base.toLocaleString('ko-KR')+'₩</div></div>'+
-          '<div style="background:rgba(255,255,255,.1)"></div>'+
-          '<div style="padding:4px 6px;text-align:center"><div style="font-size:.38rem;color:rgba(255,255,255,.4)">RATING</div><div style="font-size:.55rem">★★★★★</div></div>'+
-          '<div style="background:rgba(255,255,255,.1)"></div>'+
-          '<div style="padding:4px 6px;text-align:center"><div style="font-size:.38rem;color:rgba(255,255,255,.4)">VERDICT</div><div style="font-size:.55rem;color:#ff3058">BUY</div></div>'+
-        '</div>'+
-      '</div>';
-    }
-  },
-  // ── 3. TABLOID ───────────────────────────────────────────────────
-  {
-    id:'tabloid', name:'DAILY HYPE', label:'Tabloid Drama',
-    spineBg:'linear-gradient(180deg,#cc0000,#880000)', spineColor:'#fff',
-    headerFont:'Impact,sans-serif',
-    priceBg:'#ffd000', priceColor:'#000',
-    aiImg:pollinationsImg('dramatic tabloid newspaper white background bold red headline'),
-    renderMag(g,src,capHtml){
-      return '<div style="width:100%;height:100%;background:#fff;display:flex;flex-direction:column;font-family:Impact,sans-serif;color:#000;position:relative;overflow:hidden">'+
-        '<div style="background:#cc0000;padding:4px 8px;text-align:center;flex-shrink:0">'+
-          '<div style="font-size:1.2rem;color:#fff;letter-spacing:3px">☆ DAILY HYPE ☆</div>'+
-        '</div>'+
-        '<div style="display:flex;justify-content:space-between;padding:2px 8px;background:#f5f5f5;border-bottom:3px solid #000;flex-shrink:0">'+
-          '<span style="font-size:.45rem;color:#cc0000">⚡ BREAKING</span>'+
-          '<span style="font-size:.45rem">EXCLUSIVE</span>'+
-          '<span style="font-size:.45rem;color:#cc0000">BUY NOW ⚡</span>'+
-        '</div>'+
-        '<div style="padding:3px 8px;background:#fff;flex-shrink:0;border-bottom:2px solid #000">'+
-          '<div style="font-size:.65rem;letter-spacing:.3px;line-height:1.1">SHOCKING: '+g.product.toUpperCase()+' SELLS FOR DOUBLE THE PRICE</div>'+
-        '</div>'+
-        '<div style="flex:1;position:relative;overflow:hidden;border:2px solid #000;margin:3px 4px;min-height:0">'+
-          (src?'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block">':'<div style="width:100%;height:100%;background:#eee;display:flex;align-items:center;justify-content:center;font-size:4rem">'+g.emoji+'</div>')+
-          '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,transparent 50%)"></div>'+
-          '<div style="position:absolute;bottom:0;left:0;right:0;padding:7px 8px">'+capHtml+'</div>'+
-        '</div>'+
-        '<div style="background:#000;padding:4px 8px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">'+
-          '<span style="font-size:.42rem;color:#ffd000;letter-spacing:1px">LIMITED OFFER!</span>'+
-          '<span style="font-size:.42rem;color:#fff">ACT NOW →</span>'+
-        '</div>'+
-      '</div>';
-    }
-  },
-  // ── 4. TECH / MINIMAL ────────────────────────────────────────────
-  {
-    id:'apple', name:'THINK.', label:'Tech / Minimal',
-    spineBg:'linear-gradient(180deg,#1c1c2e,#2d2d4e)', spineColor:'#00e890',
-    headerFont:'DM Mono,monospace',
-    priceBg:'#00e890', priceColor:'#040f0a',
-    aiImg:pollinationsImg('minimal technology dark navy background green neon glow futuristic clean'),
-    renderMag(g,src,capHtml){
-      return '<div style="width:100%;height:100%;background:#0a0a12;display:flex;flex-direction:column;font-family:\'DM Mono\',monospace;position:relative;overflow:hidden;color:#fff">'+
-        '<div style="padding:5px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,232,144,.2);flex-shrink:0">'+
-          '<span style="font-size:.8rem;color:#00e890;letter-spacing:3px">TECH.</span>'+
-          '<span style="font-size:.38rem;color:rgba(0,232,144,.4);letter-spacing:4px">QUARTERLY</span>'+
-        '</div>'+
-        '<div style="padding:2px 12px;font-size:.38rem;color:rgba(0,232,144,.35);border-bottom:1px solid rgba(0,232,144,.1);flex-shrink:0">&gt; loading: '+g.product.toLowerCase().replace(/ /g,'_')+'_v2.0...</div>'+
-        '<div style="flex:1;position:relative;overflow:hidden;min-height:0">'+
-          (src?'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.7) brightness(.85)">':'<div style="width:100%;height:100%;background:linear-gradient(160deg,#1c1c2e,#2d2d4e);display:flex;align-items:center;justify-content:center;font-size:4rem">'+g.emoji+'</div>')+
-          '<div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,232,144,.02) 3px,rgba(0,232,144,.02) 4px)"></div>'+
-          '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,18,.9) 0%,transparent 55%)"></div>'+
-          '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px 12px">'+capHtml+'</div>'+
-        '</div>'+
-        '<div style="padding:4px 12px;background:#050510;border-top:1px solid rgba(0,232,144,.2);flex-shrink:0;display:flex;justify-content:space-between">'+
-          '<span style="font-size:.38rem;color:rgba(0,232,144,.5)">[sys]: purchase_now</span>'+
-          '<span style="font-size:.42rem;color:#00e890">₩'+g.base.toLocaleString('ko-KR')+'++</span>'+
-        '</div>'+
-      '</div>';
-    }
-  },
-  // ── 5. BEAUTY / COSMO ────────────────────────────────────────────
-  {
-    id:'cosmo', name:'GLOSS', label:'Beauty / Cosmetics',
-    spineBg:'linear-gradient(180deg,#ff69b4,#c2185b)', spineColor:'#fff',
-    headerFont:'Pacifico,cursive',
-    priceBg:'#ff69b4', priceColor:'#fff',
-    aiImg:pollinationsImg('beauty cosmetics glamour pink sparkle glitter soft lighting feminine editorial'),
-    renderMag(g,src,capHtml){
-      return '<div style="width:100%;height:100%;background:linear-gradient(160deg,#fff0f5,#ffe0ec);display:flex;flex-direction:column;position:relative;overflow:hidden;color:#333">'+
-        '<div style="background:linear-gradient(90deg,#ff69b4,#c2185b);padding:5px 10px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">'+
-          '<span style="font-family:\'Pacifico\',cursive;font-size:1rem;color:#fff">Gloss</span>'+
-          '<span style="font-size:.38rem;color:rgba(255,255,255,.8);letter-spacing:2px;font-family:sans-serif">BEAUTY ISSUE ✦</span>'+
-        '</div>'+
-        '<div style="padding:3px 10px;background:#fff;flex-shrink:0;border-bottom:1px solid #ffb6c1">'+
-          '<div style="font-family:sans-serif;font-size:.52rem;font-weight:700;color:#c2185b">THIS MONTH\'S OBSESSION →</div>'+
-          '<div style="font-family:sans-serif;font-size:.45rem;color:#888">'+g.product+' — the glow-up you needed</div>'+
-        '</div>'+
-        '<div style="flex:1;position:relative;overflow:hidden;min-height:0">'+
-          (src?'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.15) brightness(1.05)">':'<div style="width:100%;height:100%;background:linear-gradient(160deg,#ff69b4,#c2185b);display:flex;align-items:center;justify-content:center;font-size:4rem">'+g.emoji+'</div>')+
-          '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(194,24,91,.82) 0%,transparent 55%)"></div>'+
-          '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px">'+capHtml+'</div>'+
-        '</div>'+
-        '<div style="background:linear-gradient(90deg,#c2185b,#ff69b4);padding:4px 10px;flex-shrink:0;text-align:center">'+
-          '<span style="font-family:sans-serif;font-size:.42rem;color:#fff">because you deserve the best 💕</span>'+
-        '</div>'+
-      '</div>';
-    }
-  },
-  // ── 6. SPORTS SCIENCE ────────────────────────────────────────────
-  {
-    id:'sport', name:'MAXOUT', label:'Sports Science',
-    spineBg:'linear-gradient(180deg,#1a1a2e,#0f3460)', spineColor:'#ffd000',
-    headerFont:'Anton,sans-serif',
-    priceBg:'#ffd000', priceColor:'#1a1a2e',
-    aiImg:pollinationsImg('extreme sports dark blue background yellow lightning energy athletic performance'),
-    renderMag(g,src,capHtml){
-      return '<div style="width:100%;height:100%;background:#1a1a2e;display:flex;flex-direction:column;font-family:Anton,sans-serif;position:relative;overflow:hidden;color:#fff">'+
-        '<div style="height:3px;background:linear-gradient(90deg,#ffd000,#ff7a30,#ffd000);flex-shrink:0"></div>'+
-        '<div style="padding:4px 10px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">'+
-          '<span style="font-size:1.1rem;color:#ffd000;letter-spacing:2px">MAXOUT</span>'+
-          '<span style="font-size:.38rem;color:rgba(255,208,0,.5);letter-spacing:3px">PERFORMANCE</span>'+
-        '</div>'+
-        '<div style="background:linear-gradient(90deg,#ff7a30,#ff3058);padding:3px 10px;flex-shrink:0">'+
-          '<span style="font-size:.55rem;letter-spacing:1px">TRAIN HARD. BUY HARDER. '+g.product.toUpperCase()+'</span>'+
-        '</div>'+
-        '<div style="flex:1;position:relative;overflow:hidden;min-height:0">'+
-          (src?'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.1) saturate(1.15)">':'<div style="width:100%;height:100%;background:linear-gradient(160deg,#1a1a2e,#0f3460);display:flex;align-items:center;justify-content:center;font-size:4rem">'+g.emoji+'</div>')+
-          '<div style="position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 40px 40px 0;border-color:transparent rgba(255,208,0,.2) transparent transparent"></div>'+
-          '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,46,.9) 0%,transparent 55%)"></div>'+
-          '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px">'+capHtml+'</div>'+
-        '</div>'+
-        '<div style="background:#ffd000;padding:4px 10px;display:flex;justify-content:space-around;flex-shrink:0">'+
-          '<span style="font-size:.42rem;color:#1a1a2e;font-weight:700">POWER: MAX</span>'+
-          '<span style="font-size:.42rem;color:#1a1a2e">|</span>'+
-          '<span style="font-size:.42rem;color:#1a1a2e;font-weight:700">BUY: NOW</span>'+
-        '</div>'+
-      '</div>';
-    }
-  },
-];
+const TEMPLATES=[];
 
 
 
@@ -1027,42 +869,17 @@ function buildColors(){
     cg.appendChild(d);
   });
 }
-function buildTemplates(){
-  const tg=document.getElementById('tmpl-grid');
-  if(!tg)return;
-  tg.innerHTML='';
-  const g=currentGroup||{product:'Product',emoji:'✨',base:1500,img:''};
-  const sampleCap='<div style="font-family:Impact,sans-serif;color:#fff;font-size:12px;text-shadow:1px 1px 4px rgba(0,0,0,.9)">Buy me. You know you want to.</div>';
-  TEMPLATES.forEach(t=>{
-    const card=document.createElement('div');
-    card.className='tmpl-card';
-    card.id='tmpl-'+t.id;
-    card.onclick=()=>selTemplate(t.id);
-    // Real magazine preview using renderMag
-    const preview=document.createElement('div');
-    preview.style.cssText='flex:1;position:relative;overflow:hidden;min-height:0';
-    try {
-      preview.innerHTML=t.renderMag(g, t.aiImg||g.img||'', sampleCap);
-    } catch(e){
-      preview.style.background=t.spineBg;
-      preview.innerHTML='<div style="color:'+t.spineColor+';text-align:center;padding:10px;font-size:.8rem">'+t.name+'</div>';
-    }
-    card.appendChild(preview);
-    tg.appendChild(card);
-  });
-}
 function buildStudio(){
   try { buildFonts(); } catch(e){ console.error('buildFonts error:',e); }
   try { buildEffects(); } catch(e){ console.error('buildEffects error:',e); }
   try { buildColors(); } catch(e){ console.error('buildColors error:',e); }
-  try { buildTemplates(); } catch(e){ console.error('buildTemplates error:',e); }
 }
 function switchTab(btn,id){
   document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');document.getElementById(id)?.classList.add('active');
   // Always rebuild studio when switching tabs so fonts/colors/templates populate
-  if(id==='tab-style'||id==='tab-tmpl'){
+  if(id==='tab-style'){
     if(currentGroup) buildStudio();
   }
 }
@@ -1071,23 +888,30 @@ function selEffect(el,i){document.querySelectorAll('.fx-btn').forEach(b=>b.class
 function selColor(el,c){document.querySelectorAll('.clr-sw').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');studioState.color=c;updateCanvas();}
 function setAlign(btn,a){document.querySelectorAll('.align-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');studioState.align=a;updateCanvas();}
 function onStyleChange(){studioState.fontSize=parseInt(document.getElementById('sz-slider')?.value||18);updateCanvas();}
-function selTemplate(id){
-  const t=TEMPLATES.find(x=>x.id===id);studioState.template=t;
-  document.querySelectorAll('.tmpl-card').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('tmpl-'+id)?.classList.add('sel');updateCanvas();
-}
-
 // ── CANVAS ────────────────────────────────────
 function setupCanvas(){
-  const g=currentGroup,bg=document.getElementById('canvas-bg');
+  const g=currentGroup;
+  const bg=document.getElementById('canvas-bg');
   if(!bg)return;
-  bg.innerHTML=g.img?`<img src="${g.img}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<span style=\\'font-size:5rem\\'>${g.emoji}</span>'">`:`<span style="font-size:5rem">${g.emoji}</span>`;
+  bg.innerHTML='';
+  if(g.img){
+    const img=document.createElement('img');
+    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+    img.src=g.img;
+    img.onerror=function(){this.style.display='none';};
+    bg.appendChild(img);
+  }
+  const em=document.createElement('span');
+  em.style.fontSize='5rem';
+  em.textContent=g.emoji||'✨';
+  if(g.img) em.style.display='none';
+  bg.appendChild(em);
   const cap=document.getElementById('canvas-cap');
   if(cap)initCapDrag(cap);
 }
 function initCapDrag(el){
   let dragging=false,startX,startY,origX,origY;
-  const canvas=document.getElementById('ad-canvas');
+  const canvas=document.getElementById('ad-canvas')||document.getElementById('canvas-bg')?.closest('.bb-screen')||el.parentElement;
   function getPos(e){return e.touches?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY};}
   el.addEventListener('mousedown',start,{passive:false});
   el.addEventListener('touchstart',start,{passive:false});
@@ -1118,29 +942,7 @@ function updateCanvas(){
   const t=studioState.template;
   const g=currentGroup||{id:'A',product:'Product',emoji:'✨',base:0,color:'#ff3058'};
 
-  if(t){
-    // Build caption HTML to inject into template
-    const capTxt=document.getElementById('cap-inp')?.value||'Your caption will appear here...';
-    let ts='1px 1px 6px rgba(0,0,0,.9)';let wts='';
-    const eff=studioState.effect.name;
-    if(eff==='glow-r')ts='0 0 10px #ff3058,0 0 30px #ff3058,0 0 60px #ff3058';
-    else if(eff==='glow-y')ts='0 0 10px #ffd000,0 0 30px #ffd000,0 0 60px #ffd000';
-    else if(eff==='glow-g')ts='0 0 10px #00e890,0 0 30px #00e890,0 0 60px #00e890';
-    else if(eff==='outline')ts='-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000';
-    else if(eff==='stroke-w'){ts='none';wts='-webkit-text-stroke:2px white';}
-    else if(eff==='stroke-r'){ts='none';wts='-webkit-text-stroke:2px #ff3058';}
-    else if(eff==='shadow')ts='4px 4px 0 #000';
-    else if(eff==='fire')ts='0 -2px 4px #fff,0 -8px 10px #ff0,0 -16px 20px #f80,0 -24px 40px #f00';
-    else if(eff==='retro')ts='2px 2px 0 #ff3058,4px 4px 0 #ffd000';
-    else if(eff==='3d')ts='1px 1px 0 #ccc,2px 2px 0 #bbb,3px 3px 0 #aaa,4px 4px 6px rgba(0,0,0,.4)';
-    let rainbowStyle='';
-    if(eff==='rainbow')rainbowStyle='background:linear-gradient(90deg,#ff3058,#ffd000,#00e890,#2d9cff,#c77dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;';
-    const captionHtml=`<div style="font-family:${studioState.font.css};color:${studioState.color};font-size:${Math.min(studioState.fontSize,22)}px;text-align:${studioState.align};line-height:1.25;word-break:break-word;text-shadow:${ts};${wts};${rainbowStyle}">${capTxt}</div>`;
-    // Get photo src from cached group img
-    const photoSrc=g.img||'';
-    // Render full magazine layout — canvas becomes the magazine
-    canvas.style.cssText='width:100%;aspect-ratio:.75;border-radius:var(--r-md);overflow:hidden;position:relative;border:2px solid var(--border2);flex-shrink:0';
-    canvas.innerHTML=t.renderMag(g,photoSrc,captionHtml);
+  if(false){
   }else{
     // No template — restore standard canvas DOM
     const cap=document.getElementById('canvas-cap');
@@ -1149,14 +951,8 @@ function updateCanvas(){
     const header=document.getElementById('canvas-header');
     const footer=document.getElementById('canvas-footer');
     if(!cap){
-      // DOM was replaced by a template render — rebuild it
-      canvas.innerHTML=`
-        <div class="canvas-bg" id="canvas-bg" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden">${g.img?`<img src="${g.img}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<span style=\\'font-size:5rem\\'>${g.emoji}</span>'">`:`<span style="font-size:5rem">${g.emoji}</span>`}</div>
-        <div class="canvas-overlay" id="canvas-overlay" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 60%)"></div>
-        <div class="canvas-mag-header" id="canvas-header" style="position:absolute;top:0;left:0;right:0;z-index:4;pointer-events:none"></div>
-        <div class="canvas-mag-footer" id="canvas-footer" style="position:absolute;bottom:0;left:0;right:0;z-index:4;pointer-events:none"></div>
-        <div class="canvas-caption" id="canvas-cap" style="position:absolute;z-index:5;padding:10px 12px;word-break:break-word;max-width:88%;cursor:grab;user-select:none;touch-action:none;line-height:1.3;border:2px dashed transparent;border-radius:6px;transition:border-color .15s;bottom:44px;left:12px;right:12px;text-shadow:1px 1px 6px rgba(0,0,0,.8)">${document.getElementById('cap-inp')?.value||'Your caption will appear here...'}</div>
-        <div class="canvas-price" id="canvas-price" style="position:absolute;bottom:10px;right:10px;z-index:6;font-family:var(--font-h);font-size:1.35rem;padding:4px 13px;border-radius:4px;background:var(--yellow);color:#111">${document.getElementById('price-big')?.textContent||fmt(g.base)}</div>`;
+      // Just re-setup the photo in the billboard screen
+      setupCanvas();
       const newCap=canvas.querySelector('#canvas-cap');
       if(newCap)initCapDrag(newCap);
     }
@@ -1262,7 +1058,7 @@ function buildShelf(){
 function openMag(groupId){
   const state=cachedState,g=GROUPS.find(x=>x.id===groupId),ad=state.ads&&state.ads[groupId];
   if(!ad)return;
-  const t=ad.style?.templateId?TEMPLATES.find(x=>x.id===ad.style.templateId):null;
+  const t=null;
   const s=ad.style||{};
   const adDiv=document.getElementById('mag-modal-ad');
   adDiv.style.cssText='position:relative;width:100%;aspect-ratio:.75;overflow:hidden;';
@@ -1271,17 +1067,8 @@ function openMag(groupId){
   const capHtml=`<div style="font-family:${s.fontCss||'var(--font-b)'};color:${s.color||'#fff'};font-size:${Math.min(s.fontSize||18,24)}px;text-align:${s.align||'left'};line-height:1.25;word-break:break-word;text-shadow:1px 1px 6px rgba(0,0,0,.9)">${ad.caption}</div>`;
   const photoSrc=ad.img||'';
 
-  if(t){
-    // Use the full renderMag layout
-    adDiv.innerHTML=t.renderMag(g,photoSrc,capHtml);
-    // Add price pill on top
-    const pp=document.createElement('div');
-    pp.style.cssText=`position:absolute;bottom:10px;right:10px;z-index:20;font-family:var(--font-h);font-size:1.3rem;padding:4px 12px;border-radius:4px;background:${t.priceBg};color:${t.priceColor}`;
-    pp.textContent=fmt(ad.price);
-    adDiv.style.position='relative';
-    adDiv.appendChild(pp);
-  }else{
-    // No template fallback
+  {
+    // Show ad in modal
     adDiv.innerHTML=`
       ${ad.img?`<img src="${ad.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" onerror="this.remove()">`:`<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;background:var(--s2)">${ad.emoji}</div>`}
       <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
