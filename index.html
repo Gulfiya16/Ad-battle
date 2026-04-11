@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -222,12 +223,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .bb-city-bg::before{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 25% 8%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 40% 20%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 55% 5%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 70% 18%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(2px 2px at 35% 6%,rgba(255,255,200,.9) 0%,transparent 100%),radial-gradient(2px 2px at 75% 22%,rgba(255,255,200,.8) 0%,transparent 100%)}
 .bb-pole{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:3%;height:35%;background:linear-gradient(90deg,#1a1a2e,#2d2d4e,#1a1a2e);border-radius:2px 2px 0 0}
 .bb-arm{position:absolute;bottom:32%;left:46%;width:8%;height:2%;background:linear-gradient(180deg,#2d2d4e,#1a1a2e);border-radius:2px}
-.bb-frame{position:absolute;left:5%;right:5%;top:4%;background:linear-gradient(180deg,#1a1a2e,#111122);border-radius:6px 6px 4px 4px;box-shadow:0 0 0 3px #0d0d1a,0 0 0 5px #2d2d4e,0 20px 60px rgba(0,0,0,.8);padding:5px 5px 3px;display:flex;flex-direction:column;gap:3px}
+.bb-frame{position:absolute;left:5%;right:5%;top:4%;bottom:38%;background:linear-gradient(180deg,#1a1a2e,#111122);border-radius:6px 6px 4px 4px;box-shadow:0 0 0 3px #0d0d1a,0 0 0 5px #2d2d4e,0 20px 60px rgba(0,0,0,.8);padding:5px 5px 3px;display:flex;flex-direction:column;gap:3px}
 .bb-lights-top,.bb-lights-bottom{height:4px;border-radius:2px;background:repeating-linear-gradient(90deg,#ff3058 0px,#ff3058 4px,transparent 4px,transparent 8px,#ffd000 8px,#ffd000 12px,transparent 12px,transparent 16px,#00e890 16px,#00e890 20px,transparent 20px,transparent 24px,#2d9cff 24px,#2d9cff 28px,transparent 28px,transparent 32px);animation:ledScroll 2s linear infinite;flex-shrink:0}
 .bb-lights-bottom{animation-direction:reverse}
 @keyframes ledScroll{from{background-position:0 0}to{background-position:32px 0}}
-.bb-screen{flex:1;position:relative;overflow:hidden;border-radius:3px;background:#000;min-height:0;box-shadow:inset 0 0 20px rgba(0,0,0,.5)}
-.bb-screen .canvas-bg{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
+.bb-screen{flex:1;position:relative;overflow:hidden;border-radius:3px;background:#000;min-height:60px;box-shadow:inset 0 0 20px rgba(0,0,0,.5)}
+.bb-screen .canvas-bg{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111;width:100%;height:100%}
 .bb-screen .canvas-bg img{width:100%;height:100%;object-fit:cover;display:block}
 .bb-screen .canvas-overlay{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 60%)}
 .bb-screen .canvas-caption{position:absolute;bottom:12%;left:5%;right:5%;z-index:5;padding:6px 8px;word-break:break-word;line-height:1.3;cursor:grab;user-select:none;touch-action:none;border:2px dashed transparent;border-radius:4px;transition:border-color .15s;text-shadow:2px 2px 8px rgba(0,0,0,1)}
@@ -236,6 +237,141 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .bb-screen .canvas-price{position:absolute;bottom:4%;right:4%;z-index:6;font-family:var(--font-h);font-size:clamp(.7rem,2.5vw,1.1rem);padding:3px 10px;border-radius:3px;box-shadow:0 2px 0 #8a6e00,0 0 12px rgba(255,208,0,.5)}
 .bb-scanlines{position:absolute;inset:0;pointer-events:none;z-index:7;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px)}
 .bb-glare{position:absolute;top:0;left:0;right:0;height:35%;pointer-events:none;z-index:8;background:linear-gradient(160deg,rgba(255,255,255,.06) 0%,transparent 60%);border-radius:2px 2px 0 0}
+
+/* ── BILLBOARD ── */
+.billboard-scene{width:100%;aspect-ratio:3/2;position:relative;border-radius:var(--r-md);overflow:hidden;flex-shrink:0;background:#1a2a1a}
+/* Realistic city night photo background using CSS */
+.bb-sky{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(180deg,#0a0f1e 0%,#111827 30%,#1c2b1c 60%,#0d1a0d 100%);
+}
+/* Warm street glow at bottom */
+.bb-sky::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:35%;
+  background:linear-gradient(to top,
+    rgba(255,120,30,.25) 0%,
+    rgba(255,180,50,.1) 40%,
+    transparent 100%);
+}
+/* Stars */
+.bb-sky::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 5% 8%,rgba(255,255,255,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 12% 15%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(2px 2px at 18% 4%,rgba(255,255,220,.95) 0%,transparent 100%),
+    radial-gradient(1px 1px at 25% 12%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 32% 7%,rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 40% 18%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(2px 2px at 48% 5%,rgba(255,255,220,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 55% 14%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 63% 9%,rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 72% 3%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(2px 2px at 80% 16%,rgba(255,255,220,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 88% 6%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 95% 11%,rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 22% 22%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 68% 20%,rgba(255,255,255,.4) 0%,transparent 100%);
+}
+/* City buildings silhouette left */
+.bb-buildings-l{
+  position:absolute;bottom:20%;left:0;width:22%;
+  background:
+    linear-gradient(180deg,transparent 0%,#0d1117 2%,#0d1117 100%);
+  clip-path:polygon(0 100%,0 40%,10% 40%,10% 20%,18% 20%,18% 35%,25% 35%,30% 10%,40% 10%,40% 30%,50% 30%,60% 0%,70% 0%,70% 25%,80% 25%,85% 15%,90% 15%,90% 35%,100% 35%,100% 100%);
+  height:55%;
+}
+/* City buildings silhouette right */
+.bb-buildings-r{
+  position:absolute;bottom:20%;right:0;width:22%;
+  background:linear-gradient(180deg,transparent 0%,#0d1117 2%,#0d1117 100%);
+  clip-path:polygon(0 35%,10% 15%,15% 15%,20% 0%,30% 0%,35% 20%,40% 20%,45% 5%,55% 5%,55% 30%,65% 30%,70% 10%,78% 10%,80% 25%,90% 25%,90% 40%,100% 40%,100% 100%,0 100%);
+  height:55%;
+}
+/* Window lights in buildings */
+.bb-buildings-l::after,.bb-buildings-r::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(1px 2px at 20% 50%,rgba(255,220,100,.8) 0%,transparent 100%),
+    radial-gradient(1px 2px at 40% 70%,rgba(255,220,100,.6) 0%,transparent 100%),
+    radial-gradient(1px 2px at 60% 45%,rgba(255,220,100,.7) 0%,transparent 100%),
+    radial-gradient(1px 2px at 75% 60%,rgba(200,220,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 2px at 85% 55%,rgba(255,220,100,.6) 0%,transparent 100%);
+}
+/* Road at bottom */
+.bb-road{
+  position:absolute;bottom:0;left:0;right:0;height:22%;
+  background:linear-gradient(180deg,#1a1a20 0%,#0d0d10 100%);
+}
+.bb-road::before{
+  content:'';position:absolute;top:30%;left:0;right:0;bottom:0;
+  background:linear-gradient(90deg,
+    transparent 0%,transparent 10%,
+    rgba(255,255,255,.06) 10%,rgba(255,255,255,.06) 12%,
+    transparent 12%,transparent 22%,
+    rgba(255,255,255,.06) 22%,rgba(255,255,255,.06) 24%,
+    transparent 24%,transparent 76%,
+    rgba(255,255,255,.06) 76%,rgba(255,255,255,.06) 78%,
+    transparent 78%,transparent 88%,
+    rgba(255,255,255,.06) 88%,rgba(255,255,255,.06) 90%,
+    transparent 90%,transparent 100%);
+}
+/* Car light streaks */
+.bb-road::after{
+  content:'';position:absolute;top:10%;left:5%;right:5%;height:3px;
+  background:linear-gradient(90deg,
+    transparent 0%,rgba(255,180,50,.4) 20%,rgba(255,200,80,.7) 35%,
+    rgba(255,200,80,.4) 50%,transparent 60%,
+    rgba(220,50,50,.3) 70%,rgba(220,50,50,.5) 85%,transparent 100%);
+  border-radius:4px;
+  filter:blur(1px);
+}
+/* Billboard board */
+.bb-board{
+  position:absolute;left:3%;right:3%;top:2%;bottom:23%;
+  background:#0a0a12;
+  border-radius:6px;
+  border:3px solid #1e1e3a;
+  outline:2px solid #0a0a12;
+  box-shadow:
+    0 0 0 5px #252545,
+    0 20px 60px rgba(0,0,0,.8),
+    0 0 80px rgba(100,120,255,.2),
+    inset 0 0 30px rgba(0,0,0,.5);
+  display:flex;flex-direction:column;padding:5px;gap:4px;
+}
+/* Spotlight effects on board */
+.bb-board::before{
+  content:'';position:absolute;top:-20px;left:15%;right:15%;height:20px;
+  background:linear-gradient(180deg,transparent,rgba(255,255,200,.05));
+}
+/* LED strips */
+.bb-led-top,.bb-led-bottom{
+  height:5px;flex-shrink:0;border-radius:2px;
+  background:repeating-linear-gradient(90deg,
+    #ff3058 0,#ff3058 4px,transparent 4px,transparent 8px,
+    #ffd000 8px,#ffd000 12px,transparent 12px,transparent 16px,
+    #00e890 16px,#00e890 20px,transparent 20px,transparent 24px,
+    #2d9cff 24px,#2d9cff 28px,transparent 28px,transparent 32px);
+  animation:led 1.5s linear infinite;
+}
+.bb-led-bottom{animation-direction:reverse}
+@keyframes led{from{background-position:0 0}to{background-position:32px 0}}
+/* Screen */
+.bb-screen{
+  flex:1;position:relative;overflow:hidden;border-radius:3px;
+  background:#000;min-height:0;
+  box-shadow:inset 0 0 20px rgba(0,0,0,.6);
+}
+/* Pole */
+.bb-pole-new{
+  position:absolute;bottom:0;left:49%;right:49%;
+  height:23%;
+  background:linear-gradient(90deg,#0d0d1a,#252545,#1a1a3e,#252545,#0d0d1a);
+  border-radius:2px 2px 0 0;
+}
+
 </style>
 </head>
 <body>
@@ -404,29 +540,39 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
   <label class="lbl">Live billboard preview</label>
 
   <!-- BILLBOARD MOCKUP -->
-  <div class="billboard-scene" id="billboard-scene">
-    <!-- City night background -->
-    <div class="bb-city-bg"></div>
-    <!-- Billboard structure -->
-    <div class="bb-pole"></div>
-    <div class="bb-arm"></div>
-    <div class="bb-frame">
-      <div class="bb-lights-top"></div>
+  <div class="billboard-scene">
+    <div class="bb-sky"></div>
+    <div class="bb-buildings-l"></div>
+    <div class="bb-buildings-r"></div>
+    <div class="bb-road"></div>
+    <div class="bb-board">
+      <div class="bb-led-top"></div>
       <div class="bb-screen" id="ad-canvas">
-        <!-- Ad content inside screen -->
-        <div class="canvas-bg" id="canvas-bg"></div>
-        <div class="canvas-overlay" id="canvas-overlay"></div>
-        <div class="canvas-caption" id="canvas-cap">Your caption will appear here...</div>
-        <div class="canvas-price" id="canvas-price" style="background:var(--yellow);color:#111">1,200₩</div>
-        <!-- LED scanline effect -->
-        <div class="bb-scanlines"></div>
-        <!-- Screen glare -->
-        <div class="bb-glare"></div>
+        <img id="canvas-photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" src="" alt="">
+        <div id="canvas-emoji-fb" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;background:#111"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 60%);pointer-events:none"></div>
+        <div id="canvas-cap" style="position:absolute;bottom:14%;left:5%;right:5%;color:#fff;font-size:18px;font-family:Impact,sans-serif;text-shadow:2px 2px 8px rgba(0,0,0,1);line-height:1.3;cursor:grab;user-select:none;touch-action:none;z-index:5">Your caption will appear here...</div>
+        <div id="canvas-price" style="position:absolute;bottom:4%;right:4%;background:var(--yellow);color:#111;font-family:var(--font-h);font-size:1.1rem;padding:3px 10px;border-radius:3px;z-index:6;box-shadow:0 2px 0 #8a6e00">1,200₩</div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:7"></div>
       </div>
-      <div class="bb-lights-bottom"></div>
+      <div class="bb-led-bottom"></div>
+    </div>
+    <!-- Pole -->
+    <div class="bb-pole-new"></div>
+  </div>
+  <div style="height:10px"></div>
+  <div class="inset" style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:.72rem;color:var(--muted);flex-shrink:0;min-width:60px">🔍 Zoom</span>
+      <input type="range" min="100" max="250" value="100" id="photo-zoom" oninput="updatePhotoZoom(this.value)" style="flex:1">
+      <span style="font-size:.7rem;color:var(--muted);min-width:34px;text-align:right" id="zoom-label">100%</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:.72rem;color:var(--muted);flex-shrink:0;min-width:60px">↕️ Position</span>
+      <input type="range" min="0" max="100" value="50" id="photo-pos" oninput="updatePhotoPos(this.value)" style="flex:1">
     </div>
   </div>
-  <div style="height:14px"></div>
+  <div style="height:12px"></div>
   <button class="btn btn-y btn-full" onclick="submitAd()">YEET this ad into the world 🚀</button>
   <div style="height:18px"></div>
 </div>
@@ -542,23 +688,12 @@ let selectedTech = null, myVote = null, myVotes = {}, isAdWriter = false;
 let studioState = { font:null, effect:null, color:'#ffffff', fontSize:18, align:'left', template:null, capX:null, capY:null };
 
 // ── DATA ──────────────────────────────────────
-// Pollinations AI photo generator — creates a unique product photo for each group
-function pollinationsImg(prompt) {
-  const encoded = encodeURIComponent(prompt);
-  return `https://image.pollinations.ai/prompt/${encoded}?width=600&height=800&nologo=true&model=flux&seed=42`;
-}
-
 const GROUPS=[
-  {id:'A',name:'Group A',product:'Plain White Socks',emoji:'🧦',base:1500,color:'#ff3058',
-   img:pollinationsImg('a pair of plain white cotton socks on a clean white background, product photography, studio lighting, minimalist')},
-  {id:'B',name:'Group B',product:'Tissue Box',emoji:'🤧',base:1200,color:'#ffd000',
-   img:pollinationsImg('a plain white tissue box on a clean white background, product photography, studio lighting, minimalist, soft shadows')},
-  {id:'C',name:'Group C',product:'Rubber Gloves',emoji:'🧤',base:2000,color:'#00e890',
-   img:pollinationsImg('yellow rubber cleaning gloves on a clean white background, product photography, studio lighting, minimalist')},
-  {id:'D',name:'Group D',product:'Sticky Notes',emoji:'📝',base:1500,color:'#2d9cff',
-   img:pollinationsImg('a stack of yellow sticky note pads on a white background, product photography, studio lighting, minimalist, clean')},
-  {id:'E',name:'Group E',product:'Scissors',emoji:'✂️',base:2500,color:'#c77dff',
-   img:pollinationsImg('a pair of silver scissors on a clean white background, product photography, studio lighting, minimalist, sharp')},
+  {id:'A',name:'Group A',product:'Plain White Socks',emoji:'🧦',base:1500,color:'#ff3058',img:'https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/332431s.jpg?im=Resize,width=750'},
+  {id:'B',name:'Group B',product:'Tissue Box',emoji:'🤧',base:1200,color:'#ffd000',img:'https://www.stanleypackaging.com.au/wp-content/uploads/2023/08/SPF2180-1.jpg'},
+  {id:'C',name:'Group C',product:'Rubber Gloves',emoji:'🧤',base:2000,color:'#00e890',img:'https://s7e5a.scene7.com/is/image/medi/Gummihandschuhe-MG-3776_66700_1?$Product-medical-2to3$&wid=420&hei=630'},
+  {id:'D',name:'Group D',product:'Sticky Notes',emoji:'📝',base:1500,color:'#2d9cff',img:'https://thefullstop.lk/wp-content/uploads/2022/08/751110.jpg'},
+  {id:'E',name:'Group E',product:'Scissors',emoji:'✂️',base:2500,color:'#c77dff',img:'https://m.media-amazon.com/images/I/61pnsnr+qBL._AC_UF894,1000_QL80_.jpg'},
 ];
 const TECH_LABELS={scarcity:'⏳ Scarcity',authority:'🏆 Authority',social_proof:'💬 Social Proof'};
 const MEDALS=['🥇','🥈','🥉','4️⃣','5️⃣'];
@@ -891,27 +1026,42 @@ function onStyleChange(){studioState.fontSize=parseInt(document.getElementById('
 // ── CANVAS ────────────────────────────────────
 function setupCanvas(){
   const g=currentGroup;
-  const bg=document.getElementById('canvas-bg');
-  if(!bg)return;
-  bg.innerHTML='';
-  if(g.img){
-    const img=document.createElement('img');
-    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
-    img.src=g.img;
-    img.onerror=function(){this.style.display='none';};
-    bg.appendChild(img);
+  if(!g)return;
+  // Photo
+  const photo=document.getElementById('canvas-photo');
+  const emojiFb=document.getElementById('canvas-emoji-fb');
+  if(photo && g.img){
+    photo.src=g.img;
+    photo.style.display='block';
+    if(emojiFb) emojiFb.style.display='none';
+    photo.onerror=function(){
+      this.style.display='none';
+      if(emojiFb){emojiFb.textContent=g.emoji||'✨';emojiFb.style.display='flex';}
+    };
+  } else if(emojiFb){
+    if(photo) photo.style.display='none';
+    emojiFb.textContent=g.emoji||'✨';
+    emojiFb.style.display='flex';
   }
-  const em=document.createElement('span');
-  em.style.fontSize='5rem';
-  em.textContent=g.emoji||'✨';
-  if(g.img) em.style.display='none';
-  bg.appendChild(em);
+  // Reset sliders
+  _photoZoom=100; _photoPos=50;
+  const zs=document.getElementById('photo-zoom'); if(zs)zs.value=100;
+  const ps=document.getElementById('photo-pos'); if(ps)ps.value=50;
+  const zl=document.getElementById('zoom-label'); if(zl)zl.textContent='100%';
+  // Price
+  const pp=document.getElementById('canvas-price');
+  if(pp) pp.textContent=fmt(g.base);
+  const pb=document.getElementById('price-big');
+  if(pb) pb.textContent=fmt(g.base);
+  const pr=document.getElementById('price-base-ref');
+  if(pr) pr.textContent=fmt(g.base);
+  // Caption drag
   const cap=document.getElementById('canvas-cap');
-  if(cap)initCapDrag(cap);
+  if(cap) initCapDrag(cap);
 }
 function initCapDrag(el){
   let dragging=false,startX,startY,origX,origY;
-  const canvas=document.getElementById('ad-canvas')||document.getElementById('canvas-bg')?.closest('.bb-screen')||el.parentElement;
+  const canvas=document.getElementById('ad-canvas')||el.parentElement;
   function getPos(e){return e.touches?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY};}
   el.addEventListener('mousedown',start,{passive:false});
   el.addEventListener('touchstart',start,{passive:false});
@@ -935,43 +1085,44 @@ function initCapDrag(el){
 }
 
 function updateCanvas(){
-  const canvas=document.getElementById('ad-canvas');
-  if(!canvas)return;
   if(!studioState.font) studioState.font=FONTS[0];
   if(!studioState.effect) studioState.effect=EFFECTS[0];
-  const t=studioState.template;
-  const g=currentGroup||{id:'A',product:'Product',emoji:'✨',base:0,color:'#ff3058'};
+  const cap=document.getElementById('canvas-cap');
+  if(!cap)return;
+  // Apply font/color/size/effect
+  cap.style.fontFamily=studioState.font.css;
+  cap.style.color=studioState.color;
+  cap.style.fontSize=studioState.fontSize+'px';
+  cap.style.textAlign=studioState.align;
+  studioState.effect.apply(cap);
+  // Update text if empty
+  const txt=document.getElementById('cap-inp')?.value;
+  if(txt!==undefined) cap.textContent=txt||'Your caption will appear here...';
+}
 
-  if(false){
-  }else{
-    // No template — restore standard canvas DOM
-    const cap=document.getElementById('canvas-cap');
-    const overlay=document.getElementById('canvas-overlay');
-    const pricePill=document.getElementById('canvas-price');
-    const header=document.getElementById('canvas-header');
-    const footer=document.getElementById('canvas-footer');
-    if(!cap){
-      // Just re-setup the photo in the billboard screen
-      setupCanvas();
-      const newCap=canvas.querySelector('#canvas-cap');
-      if(newCap)initCapDrag(newCap);
-    }
-    const capEl=document.getElementById('canvas-cap');
-    if(capEl){
-      capEl.style.fontFamily=studioState.font.css;
-      capEl.style.color=studioState.color;
-      capEl.style.fontSize=studioState.fontSize+'px';
-      capEl.style.textAlign=studioState.align;
-      studioState.effect.apply(capEl);
-      if(studioState.capX===null){capEl.style.bottom='44px';capEl.style.left='12px';capEl.style.right='12px';capEl.style.top='';}
-    }
-    const ov=document.getElementById('canvas-overlay');
-    if(ov)ov.style.background='linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 60%)';
-    const hd=document.getElementById('canvas-header');if(hd)hd.innerHTML='';
-    const ft=document.getElementById('canvas-footer');if(ft)ft.innerHTML='';
-    const pp=document.getElementById('canvas-price');
-    if(pp){pp.style.background='var(--yellow)';pp.style.color='#111';}
-  }
+let _photoZoom=100, _photoPos=50;
+function updatePhotoZoom(val){
+  _photoZoom=parseInt(val);
+  applyPhotoTransform();
+  const label=document.getElementById('zoom-label');
+  if(label) label.textContent=val+'%';
+}
+function updatePhotoPos(val){
+  _photoPos=parseInt(val);
+  applyPhotoTransform();
+}
+function applyPhotoTransform(){
+  const photo=document.getElementById('canvas-photo');
+  if(!photo)return;
+  photo.style.width=_photoZoom+'%';
+  photo.style.height=_photoZoom+'%';
+  photo.style.minWidth=_photoZoom+'%';
+  photo.style.minHeight=_photoZoom+'%';
+  photo.style.objectFit='cover';
+  photo.style.position='absolute';
+  photo.style.left='50%';
+  photo.style.top=_photoPos+'%';
+  photo.style.transform='translate(-50%,-'+_photoPos+'%)';
 }
 
 function onCapInput(){
