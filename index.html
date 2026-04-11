@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,8 +84,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 
 /* LANDING */
 #s-landing{padding:0;max-width:100%}
-.land-bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--bg)}
-.land-overlay{position:fixed;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(8,8,16,.3) 0%,rgba(8,8,16,.72) 55%,rgba(8,8,16,.97) 100%)}
+.land-bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--bg)}
+.land-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(8,8,16,.3) 0%,rgba(8,8,16,.72) 55%,rgba(8,8,16,.97) 100%);pointer-events:none}
 .land-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px 20px;text-align:center;max-width:520px;margin:0 auto}
 .land-title{font-family:var(--font-h);font-size:clamp(4rem,16vw,7rem);line-height:.85;letter-spacing:2px;text-shadow:0 0 80px rgba(255,48,88,.5),0 0 160px rgba(255,48,88,.2)}
 .land-sub{font-size:.95rem;color:rgba(240,240,250,.7);line-height:1.65;margin:12px 0 6px}
@@ -227,7 +226,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 <div class="toast" id="toast"></div>
 
 <!-- LANDING -->
-<div class="screen active" id="s-landing" style="padding:0;max-width:100%">
+<div class="screen active" id="s-landing" style="padding:0;max-width:100%;position:relative;overflow:hidden">
   <div class="land-bg" id="land-bg"></div>
   <div class="land-overlay"></div>
   <div class="land-content">
@@ -517,12 +516,23 @@ let selectedTech = null, myVote = null, myVotes = {}, isAdWriter = false;
 let studioState = { font:null, effect:null, color:'#ffffff', fontSize:18, align:'left', template:null, capX:null, capY:null };
 
 // ── DATA ──────────────────────────────────────
+// Pollinations AI photo generator — creates a unique product photo for each group
+function pollinationsImg(prompt) {
+  const encoded = encodeURIComponent(prompt);
+  return `https://image.pollinations.ai/prompt/${encoded}?width=600&height=800&nologo=true&model=flux&seed=42`;
+}
+
 const GROUPS=[
-  {id:'A',name:'Group A',product:'Plain White Socks',emoji:'🧦',base:1500,color:'#ff3058',img:'https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/332431s.jpg?im=Resize,width=750'},
-  {id:'B',name:'Group B',product:'Tissue Box',emoji:'🤧',base:1200,color:'#ffd000',img:'https://www.stanleypackaging.com.au/wp-content/uploads/2023/08/SPF2180-1.jpg'},
-  {id:'C',name:'Group C',product:'Rubber Gloves',emoji:'🧤',base:2000,color:'#00e890',img:'https://s7e5a.scene7.com/is/image/medi/Gummihandschuhe-MG-3776_66700_1?$Product-medical-2to3$&wid=420&hei=630'},
-  {id:'D',name:'Group D',product:'Sticky Notes',emoji:'📝',base:1500,color:'#2d9cff',img:'https://thefullstop.lk/wp-content/uploads/2022/08/751110.jpg'},
-  {id:'E',name:'Group E',product:'Scissors',emoji:'✂️',base:2500,color:'#c77dff',img:'https://m.media-amazon.com/images/I/61pnsnr+qBL._AC_UF894,1000_QL80_.jpg'},
+  {id:'A',name:'Group A',product:'Plain White Socks',emoji:'🧦',base:1500,color:'#ff3058',
+   img:pollinationsImg('a pair of plain white cotton socks on a clean white background, product photography, studio lighting, minimalist')},
+  {id:'B',name:'Group B',product:'Tissue Box',emoji:'🤧',base:1200,color:'#ffd000',
+   img:pollinationsImg('a plain white tissue box on a clean white background, product photography, studio lighting, minimalist, soft shadows')},
+  {id:'C',name:'Group C',product:'Rubber Gloves',emoji:'🧤',base:2000,color:'#00e890',
+   img:pollinationsImg('yellow rubber cleaning gloves on a clean white background, product photography, studio lighting, minimalist')},
+  {id:'D',name:'Group D',product:'Sticky Notes',emoji:'📝',base:1500,color:'#2d9cff',
+   img:pollinationsImg('a stack of yellow sticky note pads on a white background, product photography, studio lighting, minimalist, clean')},
+  {id:'E',name:'Group E',product:'Scissors',emoji:'✂️',base:2500,color:'#c77dff',
+   img:pollinationsImg('a pair of silver scissors on a clean white background, product photography, studio lighting, minimalist, sharp')},
 ];
 const TECH_LABELS={scarcity:'⏳ Scarcity',authority:'🏆 Authority',social_proof:'💬 Social Proof'};
 const MEDALS=['🥇','🥈','🥉','4️⃣','5️⃣'];
@@ -976,10 +986,10 @@ function buildStudio(){
     tg.innerHTML=TEMPLATES.map(t=>`<div class="tmpl-card" id="tmpl-${t.id}" onclick="selTemplate('${t.id}')"><div class="tmpl-preview" style="overflow:hidden;height:100%">${t.renderMag(g,g.img||'',sampleCap)}</div></div>`).join('');
   }
 }
+function switchTab(btn,id){
   document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');document.getElementById(id)?.classList.add('active');
-  
 }
 function selFont(el,i){document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');studioState.font=FONTS[i];updateCanvas();}
 function selEffect(el,i){document.querySelectorAll('.fx-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');studioState.effect=EFFECTS[i];updateCanvas();}
@@ -1125,9 +1135,7 @@ async function submitAd(){
   const caption=document.getElementById('cap-inp').value.trim();
   if(!caption){showToast('⚠️ Write a caption first!');return;}
   if(!selectedTech){showToast('⚠️ Choose a technique first!');return;}
-  // Warn if caption is a raw unedited tip
-    if(!confirm('⚠️ Your caption looks like an unedited example.\nThe class will recognise it!\n\nSubmit anyway?')) return;
-  }
+
   const pct=parseInt(document.getElementById('price-slider').value),price=Math.round(currentGroup.base*(1+pct/100));
   const t=studioState.template;
   const ad={groupId:currentGroup.id,groupName:currentGroup.name,product:currentGroup.product,emoji:currentGroup.emoji,caption,technique:selectedTech,price,base:currentGroup.base,img:currentGroup.img||null,
