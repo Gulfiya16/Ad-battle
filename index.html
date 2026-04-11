@@ -1,0 +1,1329 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>💀 Buy or Bye</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Space+Grotesk:wght@400;500;700&family=Caveat:wght@600&family=Playfair+Display:wght@700&family=Righteous&family=DM+Mono&display=swap" rel="stylesheet">
+
+<!-- ███ FIREBASE ███ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyBjSn8Txo-mQiDNk-cdlrfChnUoV33eA2Y",
+    authDomain: "ad-battle-5bdfa.firebaseapp.com",
+    databaseURL: "https://ad-battle-5bdfa-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "ad-battle-5bdfa",
+    storageBucket: "ad-battle-5bdfa.firebasestorage.app",
+    messagingSenderId: "210440749157",
+    appId: "1:210440749157:web:8b578aefa0d467ced6468c"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+  window._fb = { db, ref, set, get, onValue, update };
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0a0a0f; --s1:#13131a; --s2:#1c1c26; --s3:#242433;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+  --text:#f0f0fa; --muted:#6b6b88; --dim:#2a2a3d;
+  --red:#ff3a5c; --yellow:#ffe44d; --green:#0dffaa;
+  --blue:#3d8eff; --purple:#c77dff; --orange:#ff8c42;
+  --font-h:'Boogaloo',cursive; --font-b:'Space Grotesk',sans-serif;
+  --r-sm:10px; --r-md:16px; --r-lg:22px; --r-xl:32px;
+}
+body { font-family:var(--font-b); background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1000;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+}
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 55% 35% at 10% 10%,rgba(255,58,92,.13) 0%,transparent 70%),
+    radial-gradient(ellipse 45% 35% at 90% 85%,rgba(13,255,170,.10) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 30% at 70% 5%,rgba(255,228,77,.09) 0%,transparent 60%);
+}
+.screen { display:none; flex-direction:column; min-height:100vh; max-width:520px; margin:0 auto; padding:20px 18px 32px; position:relative; z-index:1; }
+.screen.active { display:flex; animation:fadeUp .3s ease both; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+h1 { font-family:var(--font-h); font-size:clamp(3rem,12vw,5rem); line-height:.9; letter-spacing:1px; }
+h2 { font-family:var(--font-h); font-size:clamp(1.8rem,7vw,2.4rem); line-height:1; }
+.accent-red{color:var(--red)} .accent-yellow{color:var(--yellow)} .accent-green{color:var(--green)} .accent-orange{color:var(--orange)}
+.muted{color:var(--muted)} .small{font-size:.82rem}
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 26px; border-radius:var(--r-sm); border:none; cursor:pointer; font-family:var(--font-h); font-size:1.2rem; letter-spacing:.5px; transition:transform .12s,box-shadow .12s,opacity .2s; position:relative; overflow:hidden; }
+.btn::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,transparent 60%); pointer-events:none; }
+.btn:active{transform:scale(.95) translateY(2px)} .btn:disabled{opacity:.3;cursor:not-allowed;transform:none!important} .btn-full{width:100%}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 4px 0 #991f35,0 6px 20px rgba(255,58,92,.4)}
+.btn-yellow{background:var(--yellow);color:#111;box-shadow:0 4px 0 #998800,0 6px 20px rgba(255,228,77,.35);font-weight:700}
+.btn-green{background:var(--green);color:#050f0a;box-shadow:0 4px 0 #007a52,0 6px 20px rgba(13,255,170,.35)}
+.btn-ghost{background:var(--s2);color:var(--text);border:1px solid var(--border2);box-shadow:0 4px 0 rgba(0,0,0,.4)}
+.btn-red:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 0 #991f35,0 8px 28px rgba(255,58,92,.5)}
+.btn-yellow:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 0 #998800,0 8px 28px rgba(255,228,77,.5)}
+.btn-green:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 0 #007a52,0 8px 28px rgba(13,255,170,.5)}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px}
+.card-inset{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px}
+.badge { display:inline-flex; align-items:center; gap:5px; padding:3px 11px; border-radius:4px; font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; font-family:var(--font-b); }
+.badge-red{background:rgba(255,58,92,.15);color:var(--red);border:1px solid rgba(255,58,92,.3)}
+.badge-yellow{background:rgba(255,228,77,.15);color:var(--yellow);border:1px solid rgba(255,228,77,.3)}
+.badge-green{background:rgba(13,255,170,.12);color:var(--green);border:1px solid rgba(13,255,170,.3)}
+.badge-blue{background:rgba(61,142,255,.15);color:var(--blue);border:1px solid rgba(61,142,255,.3)}
+.badge-muted{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)}
+.input,textarea.input { width:100%; background:var(--s2); border:2px solid var(--border2); border-radius:var(--r-sm); padding:13px 15px; color:var(--text); font-family:var(--font-b); font-size:.97rem; outline:none; transition:border-color .2s,box-shadow .2s; }
+.input:focus,textarea.input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,58,92,.15)}
+.input::placeholder{color:var(--muted)} textarea.input{resize:vertical;min-height:96px;line-height:1.6}
+.label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-family:var(--font-b)}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:var(--dim);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:4px;background:var(--yellow);box-shadow:0 0 0 3px rgba(255,228,77,.25),0 3px 0 #998800;cursor:pointer;transition:box-shadow .15s}
+.dots{display:flex;gap:5px;justify-content:center;margin-bottom:4px}
+.dot{width:6px;height:6px;border-radius:2px;background:var(--dim);transition:all .3s}
+.dot.active{background:var(--red);width:20px} .dot.done{background:var(--muted)}
+/* Product photo */
+.product-photo { width:100%; aspect-ratio:4/3; border-radius:var(--r-md); overflow:hidden; border:2px solid var(--border2); display:flex; align-items:center; justify-content:center; position:relative; background:var(--s2); box-shadow:0 0 40px rgba(255,58,92,.1); }
+.product-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+.product-photo .emoji-fallback { font-size:6rem; }
+.product-photo .price-pill { position:absolute; bottom:12px; right:12px; background:var(--yellow); color:#111; font-family:var(--font-h); font-size:1.4rem; padding:4px 16px; border-radius:4px; box-shadow:0 3px 0 #998800; z-index:2; }
+/* Technique cards */
+.tech-card{border:2px solid var(--border);border-radius:var(--r-md);padding:14px 15px;cursor:pointer;display:flex;gap:13px;align-items:flex-start;transition:border-color .15s,background .15s,transform .12s;background:var(--s1)}
+.tech-card:hover{border-color:var(--border2);transform:translateX(3px)}
+.tech-card.selected{border-color:var(--yellow);background:rgba(255,228,77,.06);box-shadow:0 0 20px rgba(255,228,77,.1)}
+.tech-icon{font-size:1.8rem;flex-shrink:0;margin-top:1px} .tech-name{font-family:var(--font-h);font-size:1.2rem}
+.tech-desc{font-size:.77rem;color:var(--muted);margin-top:3px;line-height:1.45} .tech-eg{font-size:.74rem;color:var(--yellow);margin-top:5px;font-style:italic}
+/* Vote/Results */
+.vote-card{border:2px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all .2s;background:var(--s1)}
+.vote-card.voted{border-color:var(--green);box-shadow:0 0 30px rgba(13,255,170,.15)} .vote-card.own{border-color:var(--blue)}
+.vote-photo{font-size:3.5rem;padding:18px;text-align:center;background:var(--s2)}
+.vote-photo img{width:100%;max-height:140px;object-fit:cover}
+.vote-body{padding:14px 16px} .vote-caption{font-style:italic;font-size:.94rem;line-height:1.5;margin-bottom:12px}
+.vote-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.result-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--r-md);background:var(--s1);border:2px solid var(--border)}
+.result-item.gold{border-color:var(--yellow);background:rgba(255,228,77,.05);box-shadow:0 0 30px rgba(255,228,77,.1)}
+.result-rank{font-family:var(--font-h);font-size:1.6rem;min-width:36px} .result-body{flex:1;min-width:0}
+.result-caption{font-size:.8rem;font-style:italic;color:var(--muted);margin:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{height:5px;background:var(--dim);border-radius:2px;margin-top:7px}
+.bar-fill{height:5px;border-radius:2px;transition:width 1s cubic-bezier(.34,1.2,.64,1)} .result-votes{font-family:var(--font-h);font-size:1.6rem;text-align:right}
+/* Teacher */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-box{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;text-align:center}
+.stat-num{font-family:var(--font-h);font-size:2.2rem;line-height:1} .stat-lbl{font-size:.72rem;color:var(--muted);margin-top:5px}
+.phase-btn{width:100%;padding:13px 16px;border-radius:var(--r-sm);border:2px solid var(--border);background:var(--s2);color:var(--text);font-family:var(--font-h);font-size:1.1rem;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color .15s,background .15s}
+.phase-btn:hover{border-color:var(--border2);background:var(--s1)} .phase-btn.active{border-color:var(--green);background:rgba(13,255,170,.07);color:var(--green)}
+/* Misc */
+.spinner{width:42px;height:42px;border:3px solid var(--dim);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;margin:20px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.back-btn{background:none;border:none;color:var(--muted);font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:var(--font-b);padding:4px 0}
+.back-btn:hover{color:var(--text)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--yellow);color:#111;padding:10px 22px;border-radius:4px;font-weight:700;font-family:var(--font-h);font-size:1.1rem;box-shadow:0 4px 0 #998800;transition:transform .28s;z-index:9999;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.gap{display:flex;flex-direction:column;gap:14px} .row{display:flex;align-items:center;gap:10px} .spacer{flex:1}
+.check-big{font-size:5rem;text-align:center;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)} to{transform:scale(1)}}
+.confetti-piece{position:fixed;pointer-events:none;z-index:9998;width:10px;height:10px;animation:cfall var(--dur) ease-in forwards}
+@keyframes cfall{0%{transform:translateY(-10px) rotate(0deg);opacity:1} 100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+/* Landing */
+.swords{font-size:5rem;text-align:center;margin-bottom:8px;animation:clash 1.5s ease-in-out infinite alternate;filter:drop-shadow(0 0 20px rgba(255,58,92,.6))}
+@keyframes clash{from{transform:rotate(-5deg) scale(1)} to{transform:rotate(5deg) scale(1.05)}}
+.landing-bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#0a0a0f}
+.landing-overlay{position:fixed;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(10,10,15,.5) 0%,rgba(10,10,15,.75) 60%,rgba(10,10,15,.97) 100%)}
+.landing-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px 20px;text-align:center;max-width:520px;margin:0 auto}
+.landing-title{font-family:var(--font-h);font-size:clamp(3.5rem,14vw,6rem);line-height:.9;letter-spacing:2px;margin:12px 0;text-shadow:0 0 60px rgba(255,58,92,.5)}
+.landing-sub{font-size:.97rem;color:rgba(240,240,250,.75);line-height:1.65;margin-bottom:4px}
+.brand-word{position:absolute;font-family:var(--font-h);opacity:0;animation:floatWord var(--dur) var(--delay) ease-in-out infinite alternate;pointer-events:none;user-select:none;white-space:nowrap}
+@keyframes floatWord{0%{opacity:0;transform:translateY(10px) scale(.95)} 20%{opacity:.18} 80%{opacity:.15} 100%{opacity:0;transform:translateY(-10px) scale(1.05)}}
+.ticker{overflow:hidden;white-space:nowrap;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:8px 0;margin:16px 0}
+.ticker-inner{display:inline-block;animation:ticker 18s linear infinite;font-size:.78rem;color:var(--muted);font-family:var(--font-b);letter-spacing:.05em}
+@keyframes ticker{from{transform:translateX(100vw)} to{transform:translateX(-100%)}}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.role-card{background:var(--s1);border:2px solid var(--border);border-radius:var(--r-lg);padding:22px 16px;text-align:center;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s}
+.role-card:hover{border-color:var(--red);transform:translateY(-3px);box-shadow:0 8px 30px rgba(255,58,92,.2)}
+.role-card .rc-icon{font-size:2.2rem;margin-bottom:10px} .role-card h3{font-family:var(--font-h);font-size:1.3rem} .role-card p{font-size:.77rem;color:var(--muted);margin-top:4px}
+.group-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.grp-btn{aspect-ratio:1;border-radius:var(--r-md);border:2px solid var(--border);background:var(--s1);cursor:pointer;font-family:var(--font-h);font-size:1.9rem;color:var(--text);transition:all .15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.grp-btn span{font-family:var(--font-b);font-size:.68rem;color:var(--muted);font-weight:500}
+.grp-btn:hover,.grp-btn.sel{border-color:var(--red);background:rgba(255,58,92,.1);box-shadow:0 0 20px rgba(255,58,92,.15)}
+.phase-banner{background:linear-gradient(135deg,rgba(255,58,92,.12),rgba(255,228,77,.1));border:1px solid rgba(255,228,77,.25);border-radius:var(--r-sm);padding:10px 15px;text-align:center;font-family:var(--font-h);font-size:1.05rem;color:var(--yellow);letter-spacing:.03em}
+.pulse-ring{width:80px;height:80px;border-radius:var(--r-md);border:3px solid var(--red);margin:20px auto 0;display:flex;align-items:center;justify-content:center;font-size:2rem;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,58,92,.5)} 50%{box-shadow:0 0 0 18px rgba(255,58,92,0)}}
+.callout{border-left:3px solid var(--red);padding:10px 14px;background:rgba(255,58,92,.07);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:.85rem;line-height:1.6}
+/* Studio tabs */
+.studio-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;background:var(--s2);padding:5px;border-radius:var(--r-sm);border:1px solid var(--border)}
+.stab{padding:8px 4px;border:none;background:transparent;color:var(--muted);font-family:var(--font-b);font-size:.72rem;font-weight:600;cursor:pointer;border-radius:6px;transition:all .15s;white-space:nowrap}
+.stab.active{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(255,58,92,.4)}
+.tab-panel{display:none} .tab-panel.active{display:block}
+.caption-tips{background:var(--s2);border-radius:var(--r-sm);padding:12px}
+.tips-row{display:flex;flex-wrap:wrap;gap:6px}
+.tip-pill{background:var(--s3);border:1px solid var(--border2);border-radius:4px;padding:5px 10px;font-size:.72rem;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--font-b);line-height:1.4}
+.tip-pill:hover{border-color:var(--yellow);color:var(--yellow);background:rgba(255,228,77,.07)}
+.font-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.font-btn{padding:10px 12px;border:2px solid var(--border);border-radius:var(--r-sm);background:var(--s2);cursor:pointer;text-align:center;transition:all .15s;color:var(--text);font-size:1rem}
+.font-btn:hover{border-color:var(--border2)} .font-btn.selected{border-color:var(--yellow);background:rgba(255,228,77,.07)}
+.font-btn .fname{font-size:.68rem;color:var(--muted);margin-top:3px;font-family:var(--font-b)}
+.color-row{display:flex;gap:8px;flex-wrap:wrap}
+.color-swatch{width:36px;height:36px;border-radius:6px;cursor:pointer;border:3px solid transparent;transition:all .15s;flex-shrink:0;position:relative}
+.color-swatch.selected{border-color:#fff;transform:scale(1.2);box-shadow:0 0 10px rgba(255,255,255,.3)}
+/* Shiny effect swatches */
+.color-swatch::after{content:'';position:absolute;inset:0;border-radius:3px;background:linear-gradient(135deg,rgba(255,255,255,.35) 0%,transparent 50%);pointer-events:none}
+.align-btn{flex:1;padding:8px;border:2px solid var(--border);border-radius:var(--r-sm);background:var(--s2);color:var(--muted);cursor:pointer;font-size:.8rem;font-family:var(--font-b);transition:all .15s}
+.align-btn.active{border-color:var(--yellow);color:var(--yellow);background:rgba(255,228,77,.07)}
+/* Effect buttons */
+.effect-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.effect-btn{padding:6px 12px;border:2px solid var(--border);border-radius:20px;background:var(--s2);color:var(--muted);cursor:pointer;font-size:.75rem;font-family:var(--font-b);transition:all .15s;font-weight:600}
+.effect-btn:hover{border-color:var(--border2);color:var(--text)}
+.effect-btn.active{border-color:var(--purple);color:var(--purple);background:rgba(199,125,255,.1)}
+/* Template grid */
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tmpl-card{border:2px solid var(--border);border-radius:var(--r-md);overflow:hidden;cursor:pointer;transition:all .2s;aspect-ratio:3/4;position:relative;display:flex;flex-direction:column;justify-content:flex-end}
+.tmpl-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.tmpl-card.selected{border-color:var(--yellow);box-shadow:0 0 24px rgba(255,228,77,.4)}
+.tmpl-card.selected::after{content:'✓';position:absolute;top:8px;right:8px;background:var(--yellow);color:#111;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;z-index:10}
+.tmpl-label{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;font-size:.72rem;font-weight:700;text-align:center;letter-spacing:.05em;text-transform:uppercase}
+/* Ad canvas */
+.ad-canvas{width:100%;aspect-ratio:4/3;border-radius:var(--r-md);overflow:hidden;position:relative;border:2px solid var(--border2);background:var(--s2)}
+.ad-canvas-photo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.ad-canvas-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.ad-canvas-overlay{position:absolute;inset:0;pointer-events:none}
+.ad-canvas-caption{position:absolute;padding:10px 12px;z-index:5;word-break:break-word;max-width:85%;text-shadow:1px 1px 4px rgba(0,0,0,.7);cursor:grab;user-select:none;touch-action:none;border:2px dashed transparent;border-radius:6px;transition:border-color .15s}
+.ad-canvas-caption:hover{border-color:rgba(255,255,255,.3)}
+.ad-canvas-caption.dragging{cursor:grabbing;border-color:rgba(255,255,255,.5);opacity:.9}
+.ad-canvas-price{position:absolute;bottom:12px;right:12px;z-index:6;font-family:var(--font-h);font-size:1.4rem;background:var(--yellow);color:#111;padding:4px 14px;border-radius:4px;box-shadow:0 3px 0 #998800}
+/* Shiny shimmer animation */
+@keyframes shimmer{0%{background-position:-200% center} 100%{background-position:200% center}}
+@keyframes neonPulse{0%,100%{text-shadow:0 0 5px currentColor,0 0 10px currentColor} 50%{text-shadow:0 0 20px currentColor,0 0 40px currentColor,0 0 60px currentColor}}
+@keyframes glitter{0%,100%{filter:brightness(1)} 25%{filter:brightness(1.5) saturate(1.5)} 50%{filter:brightness(1.2)} 75%{filter:brightness(1.8) saturate(2)}}
+@keyframes rainbow{0%{color:#ff3a5c} 16%{color:#ff8c42} 33%{color:#ffe44d} 50%{color:#0dffaa} 66%{color:#3d8eff} 83%{color:#c77dff} 100%{color:#ff3a5c}}
+.effect-shimmer{background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.6) 50%,rgba(255,255,255,0) 100%) !important;background-size:200% auto !important;-webkit-background-clip:text !important;-webkit-text-fill-color:transparent !important;background-clip:text !important;animation:shimmer 2s linear infinite !important}
+.effect-neon{animation:neonPulse 1.5s ease-in-out infinite !important;text-shadow:0 0 10px currentColor,0 0 20px currentColor !important}
+.effect-glitter{animation:glitter 0.8s steps(1) infinite !important}
+.effect-rainbow{animation:rainbow 2s linear infinite !important}
+.effect-shadow-hard{text-shadow:3px 3px 0px rgba(0,0,0,1) !important}
+.effect-outline{-webkit-text-stroke:1px rgba(0,0,0,.8) !important}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- LANDING -->
+<div class="screen active" id="s-landing" style="padding:0;max-width:100%">
+  <div class="landing-bg" id="landing-bg"></div>
+  <div class="landing-overlay"></div>
+  <div class="landing-content">
+    <div class="swords">⚔️</div>
+    <h1 class="landing-title"><span class="accent-red">BUY</span> <span style="color:var(--yellow)">OR</span> <span style="color:var(--green)">BYE</span></h1>
+    <p class="landing-sub">You got a boring product. You have <span class="accent-yellow">10 minutes.</span><br>Make people want it. <span class="accent-red">No excuses.</span></p>
+    <div class="ticker" style="margin:18px 0">
+      <div class="ticker-inner">⚔️ SELL IT OR FAIL &nbsp;&nbsp;&nbsp; 💀 YOUR AD. YOUR PRICE. YOUR PROBLEM. &nbsp;&nbsp;&nbsp; 🔥 NO BORING ADS ALLOWED &nbsp;&nbsp;&nbsp; 💸 THE CLASS VOTES. YOU SUFFER. &nbsp;&nbsp;&nbsp; ⚡ BUY OR BYE &nbsp;&nbsp;&nbsp; 🏆 ONLY ONE WINNER &nbsp;&nbsp;&nbsp;</div>
+    </div>
+    <div class="role-grid" style="max-width:400px;margin:0 auto">
+      <div class="role-card" onclick="go('s-group')">
+        <div class="rc-icon">👾</div>
+        <h3>I'm a Student</h3>
+        <p>Enter the arena</p>
+      </div>
+      <div class="role-card" onclick="go('s-teacher')">
+        <div class="rc-icon">🎮</div>
+        <h3>I'm the Teacher</h3>
+        <p>Run the chaos</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUP SELECT -->
+<div class="screen" id="s-group">
+  <div style="height:8px"></div>
+  <button class="back-btn" onclick="go('s-landing')">← Back</button>
+  <div style="height:20px"></div>
+  <h2>Pick your <span class="accent-red">squad 👾</span></h2>
+  <p class="muted small" style="margin-top:6px">One tablet per group. Don't pick the wrong one 💀</p>
+  <div style="height:24px"></div>
+  <div class="group-grid" id="group-grid"></div>
+  <div style="flex:1"></div>
+  <button class="btn btn-red btn-full" id="btn-join" onclick="joinGroup()" disabled>Let's gooo ⚡</button>
+  <div style="height:20px"></div>
+</div>
+
+<!-- NAME -->
+<div class="screen" id="s-name">
+  <div style="height:8px"></div>
+  <button class="back-btn" onclick="go('s-group')">← Back</button>
+  <div style="height:20px"></div>
+  <div class="badge badge-red" id="name-group-badge">GROUP A</div>
+  <div style="height:14px"></div>
+  <h2>Who <span class="accent-red">are you?</span> 👀</h2>
+  <p class="muted small" style="margin-top:6px;line-height:1.6">Enter your name — you'll each vote individually later.</p>
+  <div style="height:24px"></div>
+  <div>
+    <label class="label">Your name</label>
+    <input class="input" id="name-input" type="text" placeholder="e.g. Jiyeon" maxlength="30" oninput="checkName()">
+  </div>
+  <div style="flex:1"></div>
+  <button class="btn btn-red btn-full" id="btn-name-next" onclick="confirmName()" disabled>That's me! 👾</button>
+  <div style="height:20px"></div>
+</div>
+
+<!-- PRODUCT BRIEFING -->
+<div class="screen" id="s-product">
+  <div style="height:8px"></div>
+  <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  <div style="height:10px"></div>
+  <div class="badge badge-red" id="product-group-badge">GROUP A</div>
+  <div style="height:12px"></div>
+  <h2 id="product-name-title">Chopsticks</h2>
+  <p class="muted small" style="margin-top:5px;line-height:1.5" id="product-tagline">Your product to sell</p>
+  <div style="height:14px"></div>
+  <div class="product-photo" id="product-photo-box">
+    <span class="emoji-fallback" id="product-emoji-big">🥢</span>
+    <div class="price-pill" id="product-base-price">1,200₩</div>
+  </div>
+  <div style="height:14px"></div>
+  <div class="callout">💡 Use <strong>1 of 3 persuasion techniques</strong> to write a caption, jack up the price, and convince the class to buy. Most votes wins.</div>
+  <div style="flex:1;min-height:16px"></div>
+  <button class="btn btn-red btn-full" onclick="go('s-technique')">I'm ready. Let's cook. 🔥</button>
+  <div style="height:20px"></div>
+</div>
+
+<!-- TECHNIQUE -->
+<div class="screen" id="s-technique">
+  <div style="height:8px"></div>
+  <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+  <div style="height:10px"></div>
+  <h2>Choose your <span class="accent-yellow">weapon 🗡️</span></h2>
+  <p class="muted small" style="margin-top:5px">Pick your psychological trick.</p>
+  <div style="height:18px"></div>
+  <div class="gap">
+    <div class="tech-card" onclick="pickTech(this,'scarcity')">
+      <div class="tech-icon">⏳</div>
+      <div>
+        <div class="tech-name">Scarcity</div>
+        <div class="tech-desc">Create fear of missing out — limited time or limited stock.</div>
+        <div class="tech-eg">"Only 5 left — selling out today!"</div>
+      </div>
+    </div>
+    <div class="tech-card" onclick="pickTech(this,'authority')">
+      <div class="tech-icon">🏆</div>
+      <div>
+        <div class="tech-name">Authority</div>
+        <div class="tech-desc">Use experts, awards, or endorsements to build trust.</div>
+        <div class="tech-eg">"Recommended by 9/10 professionals"</div>
+      </div>
+    </div>
+    <div class="tech-card" onclick="pickTech(this,'social_proof')">
+      <div class="tech-icon">💬</div>
+      <div>
+        <div class="tech-name">Social Proof</div>
+        <div class="tech-desc">Show lots of people already love it — humans follow the crowd.</div>
+        <div class="tech-eg">"Over 10,000 satisfied customers!"</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;min-height:16px"></div>
+  <button class="btn btn-red btn-full" id="btn-tech-next" onclick="go('s-caption')" disabled>Locked in. Let's write. ✍️</button>
+  <div style="height:20px"></div>
+</div>
+
+<!-- AD STUDIO -->
+<div class="screen" id="s-caption">
+  <div style="height:8px"></div>
+  <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+  <div style="height:8px"></div>
+  <h2>Ad <span class="accent-red">Studio 🎨</span></h2>
+  <p class="muted small" style="margin-top:4px">Style it. Template it. Price it. Win it.</p>
+  <div style="height:12px"></div>
+
+  <div class="studio-tabs">
+    <button class="stab active" onclick="switchTab(this,'tab-caption')">✍️ Caption</button>
+    <button class="stab" onclick="switchTab(this,'tab-style')">🎨 Style</button>
+    <button class="stab" onclick="switchTab(this,'tab-template')">📰 Template</button>
+    <button class="stab" onclick="switchTab(this,'tab-price')">💸 Price</button>
+  </div>
+
+  <!-- CAPTION TAB -->
+  <div class="tab-panel active" id="tab-caption">
+    <div style="height:12px"></div>
+    <label class="label">Your slogan / caption</label>
+    <textarea class="input" id="caption-input" placeholder="e.g. Only 3 left in Korea. Your loss if you don't buy." maxlength="160" oninput="onCaptionInput()" style="min-height:100px"></textarea>
+    <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:5px">
+      <span>Punchy. Dramatic. Legendary.</span>
+      <span><span id="char-count">0</span>/160</span>
+    </div>
+    <div style="height:14px"></div>
+    <div class="caption-tips">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">💡 Tap for inspo</div>
+      <div class="tips-row" id="tips-row"></div>
+    </div>
+  </div>
+
+  <!-- STYLE TAB -->
+  <div class="tab-panel" id="tab-style">
+    <div style="height:12px"></div>
+    <label class="label">Font</label>
+    <div class="font-grid" id="font-grid"></div>
+    <div style="height:12px"></div>
+    <label class="label">Text colour</label>
+    <div class="color-row" id="color-row"></div>
+    <div style="height:12px"></div>
+    <label class="label">Text effect</label>
+    <div class="effect-row" id="effect-row"></div>
+    <div style="height:12px"></div>
+    <label class="label">Size</label>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:.8rem;color:var(--muted)">S</span>
+      <input type="range" min="11" max="36" value="18" id="font-size-slider" oninput="onStyleChange()" style="flex:1">
+      <span style="font-size:.8rem;color:var(--muted)">XL</span>
+    </div>
+    <div style="height:12px"></div>
+    <label class="label">Align</label>
+    <div style="display:flex;gap:8px">
+      <button class="align-btn active" onclick="setAlign(this,'left')">⬅️ Left</button>
+      <button class="align-btn" onclick="setAlign(this,'center')">↔️ Center</button>
+      <button class="align-btn" onclick="setAlign(this,'right')">➡️ Right</button>
+    </div>
+    <div style="height:8px"></div>
+    <p class="muted small">💡 Drag the caption text on the preview below to reposition it!</p>
+  </div>
+
+  <!-- TEMPLATE TAB -->
+  <div class="tab-panel" id="tab-template">
+    <div style="height:12px"></div>
+    <label class="label">Pick your magazine template</label>
+    <div class="template-grid" id="template-grid"></div>
+    <div style="height:8px"></div>
+    <p class="muted small" style="text-align:center">Tap a template to apply it to your ad preview ↓</p>
+  </div>
+
+  <!-- PRICE TAB -->
+  <div class="tab-panel" id="tab-price">
+    <div style="height:12px"></div>
+    <div class="card" style="text-align:center;padding:22px">
+      <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Your selling price</div>
+      <div style="font-family:var(--font-h);font-size:3.5rem;color:var(--green);line-height:1" id="price-big">1,200₩</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:6px">Base: <span id="price-base-ref">1,200₩</span></div>
+      <div class="badge badge-green" id="price-pct-badge" style="margin-top:10px">+0%</div>
+    </div>
+    <div style="height:12px"></div>
+    <input type="range" min="0" max="100" value="0" id="price-slider" oninput="onPriceSlide(this.value)" step="1">
+    <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:5px">
+      <span>Base</span><span>+50%</span><span>+100%</span>
+    </div>
+    <div style="height:12px"></div>
+    <div class="callout" id="price-roast">Set your price and we'll judge you accordingly. 👀</div>
+  </div>
+
+  <div style="height:14px"></div>
+  <label class="label">Live preview <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0"> — drag caption to reposition</span></label>
+  <div class="ad-canvas" id="ad-canvas">
+    <div class="ad-canvas-photo" id="canvas-photo-area">
+      <span id="canvas-emoji-fallback" style="font-size:5rem"></span>
+    </div>
+    <div class="ad-canvas-overlay" id="canvas-template-overlay"></div>
+    <div class="ad-canvas-caption" id="canvas-caption">Your caption will appear here...</div>
+    <div class="ad-canvas-price" id="canvas-price">1,200₩</div>
+  </div>
+
+  <div style="height:16px"></div>
+  <button class="btn btn-yellow btn-full" onclick="submitAd()">YEET this ad into the world 🚀</button>
+  <div style="height:20px"></div>
+</div>
+
+<!-- WAITING -->
+<div class="screen" id="s-waiting">
+  <div style="flex:1"></div>
+  <div class="check-big" id="wait-icon">🔥</div>
+  <h2 style="text-align:center;margin-top:14px" id="wait-title">Ad submitted!</h2>
+  <p class="muted" style="text-align:center;margin-top:8px;line-height:1.6;font-size:.92rem;padding:0 16px" id="wait-sub">Waiting for teacher to open voting…</p>
+  <div class="pulse-ring">📢</div>
+  <div style="height:16px"></div>
+  <div id="wait-group-ad" style="display:none;margin:0 8px">
+    <div class="card-inset" style="text-align:center">
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Your group's ad</div>
+      <div id="wait-ad-emoji" style="font-size:2.5rem;margin-bottom:6px"></div>
+      <div id="wait-ad-caption" style="font-style:italic;font-size:.9rem;line-height:1.5"></div>
+      <div style="margin-top:10px;display:flex;justify-content:center;gap:10px;align-items:center">
+        <span class="badge badge-yellow" id="wait-ad-tech"></span>
+        <span style="color:var(--green)" id="wait-ad-price"></span>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1.4"></div>
+</div>
+
+<!-- VOTE -->
+<div class="screen" id="s-vote">
+  <div style="height:8px"></div>
+  <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+  <div style="height:10px"></div>
+  <h2>Judge their <span class="accent-red">hustle 👀</span></h2>
+  <div class="phase-banner" style="margin:12px 0">⚔️ Vote for the ad YOU'D actually buy from. Not your own.</div>
+  <div class="gap" id="vote-cards"></div>
+  <div style="height:20px"></div>
+</div>
+
+<!-- VOTED -->
+<div class="screen" id="s-voted">
+  <div style="flex:1"></div>
+  <div style="text-align:center">
+    <div style="font-size:4rem">🗳️</div>
+    <h2 style="margin-top:14px">Vote cast!</h2>
+    <p class="muted" style="margin-top:8px;font-size:.92rem">Waiting for all votes…</p>
+    <div class="spinner"></div>
+  </div>
+  <div style="flex:1.3"></div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="s-results">
+  <div style="height:16px"></div>
+  <h2 style="text-align:center">🏆 <span class="accent-yellow">The Verdict</span></h2>
+  <p class="muted small" style="text-align:center;margin-top:5px">The people have spoken. 💀</p>
+  <div style="height:18px"></div>
+  <div class="gap" id="results-list"></div>
+  <div style="height:20px"></div>
+  <button class="btn btn-ghost btn-full" onclick="go('s-landing')">← Play again</button>
+  <div style="height:20px"></div>
+</div>
+
+<!-- TEACHER -->
+<div class="screen" id="s-teacher">
+  <div style="height:8px"></div>
+  <button class="back-btn" onclick="go('s-landing')">← Back</button>
+  <div style="height:14px"></div>
+  <h2>🎮 <span class="accent-green">Control Room</span></h2>
+  <p class="muted small" style="margin-top:4px;margin-bottom:18px">You're the puppet master. 🕹️</p>
+  <div class="stats-row" style="margin-bottom:16px">
+    <div class="stat-box">
+      <div class="stat-num accent-yellow" id="t-submitted">0<span style="font-size:1rem;color:var(--muted)">/5</span></div>
+      <div class="stat-lbl">Ads submitted</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num accent-green" id="t-votes">0</div>
+      <div class="stat-lbl">Votes cast</div>
+    </div>
+  </div>
+  <div class="gap">
+    <div class="card">
+      <h3 style="font-family:var(--font-h);font-size:1.2rem;margin-bottom:13px">⚡ Phase control</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="phase-btn" id="pbtn-work" onclick="setPhase('work')"><span>①</span> Ad creation phase</button>
+        <button class="phase-btn" id="pbtn-vote" onclick="setPhase('vote')"><span>②</span> Open voting</button>
+        <button class="phase-btn" id="pbtn-results" onclick="setPhase('results')"><span>③</span> Show results 🏆</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:.95rem;margin-bottom:12px">Submitted ads</h3>
+      <div id="teacher-ads-list"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:.95rem;margin-bottom:6px">Danger zone</h3>
+      <p class="muted small" style="margin-bottom:12px">Wipes everything clean.</p>
+      <button class="btn btn-full" style="background:rgba(255,64,96,.12);color:var(--red);border:1px solid rgba(255,64,96,.3)" onclick="resetAll()">💣 Nuke the session</button>
+    </div>
+  </div>
+  <div style="height:24px"></div>
+</div>
+
+<script>
+// ── LANDING ───────────────────────────────────
+const BRAND_WORDS = [
+  'JUST DO IT','THINK DIFFERENT',"I'M LOVIN' IT","BECAUSE YOU'RE WORTH IT",
+  'IMPOSSIBLE IS NOTHING','HAVE IT YOUR WAY','TASTE THE FEELING',"MAYBE SHE'S BORN WITH IT",
+  'THE BEST A MAN CAN GET','DO THE DEW',"FINGER LICKIN' GOOD",'OPEN HAPPINESS',
+  'CONNECTING PEOPLE','GOT MILK?','VORSPRUNG DURCH TECHNIK','BEANZ MEANZ HEINZ',
+  'ONCE YOU POP','DIAMONDS ARE FOREVER','THINK SMALL','MELTS IN YOUR MOUTH',
+];
+const BRAND_COLORS = ['#ff3a5c','#ffe44d','#0dffaa','#c77dff','#ff8c42','#3d8eff','#fff'];
+
+function initLanding() {
+  const bg = document.getElementById('landing-bg');
+  if (!bg) return;
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'brand-word';
+    el.textContent = BRAND_WORDS[i % BRAND_WORDS.length];
+    el.style.cssText = `left:${Math.random()*90}%;top:${Math.random()*90}%;font-size:${0.7+Math.random()*1.4}rem;color:${BRAND_COLORS[i%BRAND_COLORS.length]};--dur:${3+Math.random()*5}s;--delay:${Math.random()*4}s;transform:rotate(${-15+Math.random()*30}deg)`;
+    bg.appendChild(el);
+  }
+}
+
+// ── STUDIO DATA ───────────────────────────────
+const FONTS = [
+  { label:'IMPACT',      css:'"Impact","Arial Narrow",sans-serif', sample:'BIG DEAL' },
+  { label:'Handwritten', css:'"Caveat",cursive',                   sample:'buy me pls' },
+  { label:'Luxury',      css:'"Playfair Display",serif',           sample:'Élégance' },
+  { label:'Tech/Mono',   css:'"DM Mono",monospace',                sample:'BUY_NOW' },
+  { label:'Retro',       css:'"Righteous",cursive',                sample:'GROOVY' },
+  { label:'Bold Sans',   css:'"Space Grotesk",sans-serif',         sample:'TRENDY' },
+];
+
+const COLORS = ['#ffffff','#000000','#ff3a5c','#ffe44d','#0dffaa','#c77dff','#ff8c42','#3d8eff','#ffb3c6','#b3ffe8'];
+
+const EFFECTS = [
+  { id:'none',        label:'None' },
+  { id:'shimmer',     label:'✨ Shimmer' },
+  { id:'neon',        label:'💡 Neon' },
+  { id:'glitter',     label:'🌟 Glitter' },
+  { id:'rainbow',     label:'🌈 Rainbow' },
+  { id:'shadow-hard', label:'🖤 Shadow' },
+  { id:'outline',     label:'⬜ Outline' },
+];
+
+// 8 magazine templates
+const TEMPLATES = [
+  {
+    id:'vogue', name:'VOGUE', label:'💄 Luxury',
+    bg:'linear-gradient(170deg,#0d0005 0%,#1a0010 50%,#0d0005 100%)',
+    overlay:'linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.2) 60%,transparent 100%)',
+    headerFont:'"Playfair Display",serif', headerColor:'#e8c87a',
+    accentColor:'#e8c87a', border:'3px solid #e8c87a',
+    captionPos:'bottom', darkText:false,
+    headerBg:'rgba(0,0,0,.7)', showHeader:true,
+  },
+  {
+    id:'hype', name:'HYPE', label:'🔥 Streetwear',
+    bg:'#000',
+    overlay:'linear-gradient(135deg,rgba(255,0,80,.2) 0%,transparent 50%)',
+    headerFont:'"Impact",sans-serif', headerColor:'#ff3a5c',
+    accentColor:'#ff3a5c', border:'none',
+    captionPos:'center', darkText:false,
+    headerBg:'transparent', showHeader:true,
+  },
+  {
+    id:'tabloid', name:'DAILY HYPE', label:'📰 Tabloid',
+    bg:'#f5f0e8',
+    overlay:'none',
+    headerFont:'"Impact",sans-serif', headerColor:'#111',
+    accentColor:'#cc0000', border:'5px solid #cc0000',
+    captionPos:'top', darkText:true,
+    headerBg:'#cc0000', showHeader:true,
+  },
+  {
+    id:'apple', name:'think.', label:'🍎 Minimal',
+    bg:'linear-gradient(160deg,#1c1c2e,#2a2a40)',
+    overlay:'none',
+    headerFont:'"DM Mono",monospace', headerColor:'#0dffaa',
+    accentColor:'#0dffaa', border:'none',
+    captionPos:'bottom', darkText:false,
+    headerBg:'transparent', showHeader:false,
+  },
+  {
+    id:'cosmos', name:'COSMOS', label:'🌌 Space',
+    bg:'linear-gradient(135deg,#020010,#0a0030,#050020)',
+    overlay:'radial-gradient(ellipse at 50% 50%,rgba(61,142,255,.15) 0%,transparent 70%)',
+    headerFont:'"Space Grotesk",sans-serif', headerColor:'#3d8eff',
+    accentColor:'#3d8eff', border:'1px solid rgba(61,142,255,.4)',
+    captionPos:'bottom', darkText:false,
+    headerBg:'transparent', showHeader:true,
+  },
+  {
+    id:'retro', name:'GROOVY', label:'🕺 Retro 70s',
+    bg:'linear-gradient(135deg,#f4a261,#e76f51,#264653)',
+    overlay:'none',
+    headerFont:'"Righteous",cursive', headerColor:'#ffe44d',
+    accentColor:'#ffe44d', border:'4px dashed #ffe44d',
+    captionPos:'center', darkText:false,
+    headerBg:'transparent', showHeader:true,
+  },
+  {
+    id:'kpop', name:'K★POP', label:'💜 K-Pop',
+    bg:'linear-gradient(160deg,#1a0028,#2d0050,#1a0028)',
+    overlay:'radial-gradient(ellipse at 50% 0%,rgba(199,125,255,.3) 0%,transparent 60%)',
+    headerFont:'"Boogaloo",cursive', headerColor:'#c77dff',
+    accentColor:'#c77dff', border:'2px solid rgba(199,125,255,.5)',
+    captionPos:'bottom', darkText:false,
+    headerBg:'transparent', showHeader:true,
+  },
+  {
+    id:'sport', name:'SPORT+', label:'⚡ Sports',
+    bg:'#111',
+    overlay:'linear-gradient(to right,rgba(255,228,77,.1) 0%,transparent 50%)',
+    headerFont:'"Impact",sans-serif', headerColor:'#ffe44d',
+    accentColor:'#ffe44d', border:'none',
+    captionPos:'bottom', darkText:false,
+    headerBg:'#ffe44d', showHeader:true,
+  },
+];
+
+const TIPS_BY_TECH = {
+  scarcity:[
+    'Only 3 left in all of Korea!',"Selling out in 10 minutes — don't sleep",
+    'Last chance. Gone by Friday.','Limited edition. Very limited.',
+    'Stock: critically low. Regret: very high.',
+  ],
+  authority:[
+    'Recommended by 9/10 professionals','Winner: Best Product of the Year',
+    'Certified by people who know stuff','As seen in every top magazine',
+    'Scientists agree this is worth it',
+  ],
+  social_proof:[
+    'Over 50,000 happy customers','Everyone in class already wants one',
+    'Your friends have it. Do you?','5 stars from people with great taste',
+    "Trending #1 on everyone's wish list",
+  ],
+};
+
+let studioState = { font:FONTS[0], color:'#ffffff', effect:'none', fontSize:18, align:'left', template:null, captionPos:'bottom', captionX:null, captionY:null };
+
+// ── BUILD STUDIO UI ───────────────────────────
+function buildStudio() {
+  // Fonts
+  const fg = document.getElementById('font-grid');
+  if (fg) fg.innerHTML = FONTS.map((f,i) => `
+    <div class="font-btn ${i===0?'selected':''}" onclick="selectFont(this,${i})" style="font-family:${f.css}">
+      <div>${f.sample}</div><div class="fname">${f.label}</div>
+    </div>`).join('');
+
+  // Colors
+  const cr = document.getElementById('color-row');
+  if (cr) cr.innerHTML = COLORS.map((c,i) => `
+    <div class="color-swatch ${i===0?'selected':''}" style="background:${c}" onclick="selectColor(this,'${c}')"></div>`).join('');
+
+  // Effects
+  const er = document.getElementById('effect-row');
+  if (er) er.innerHTML = EFFECTS.map(e => `
+    <button class="effect-btn ${e.id==='none'?'active':''}" onclick="selectEffect(this,'${e.id}')">${e.label}</button>`).join('');
+
+  // Templates
+  const tg = document.getElementById('template-grid');
+  if (tg) tg.innerHTML = TEMPLATES.map(t => {
+    const stars = t.id==='cosmos' ? '<div style="position:absolute;inset:0;overflow:hidden">' + Array.from({length:20},()=>`<div style="position:absolute;left:${Math.random()*100}%;top:${Math.random()*100}%;width:2px;height:2px;background:#fff;border-radius:50%;opacity:${Math.random()*.8+.2}"></div>`).join('') + '</div>' : '';
+    return `
+    <div class="tmpl-card" id="tmpl-${t.id}" onclick="selectTemplate('${t.id}')"
+      style="background:${t.bg};border:${t.border}">
+      ${stars}
+      ${t.overlay !== 'none' ? `<div style="position:absolute;inset:0;background:${t.overlay}"></div>` : ''}
+      <div style="position:relative;flex:1;display:flex;align-items:center;justify-content:center;padding:10px">
+        <div style="font-family:${t.headerFont};font-size:1.3rem;color:${t.headerColor};text-align:center;line-height:1.2;letter-spacing:.05em">${t.name}</div>
+      </div>
+      <div class="tmpl-label" style="background:${t.accentColor};color:${t.darkText?'#111':'#fff'};position:relative">${t.label}</div>
+    </div>`;
+  }).join('');
+}
+
+function buildTips() {
+  const row = document.getElementById('tips-row');
+  if (!row || !selectedTech) return;
+  const tips = TIPS_BY_TECH[selectedTech] || [];
+  row.innerHTML = tips.map(t => `<div class="tip-pill" onclick="useTip(this)">${t}</div>`).join('');
+}
+
+function useTip(el) {
+  const inp = document.getElementById('caption-input');
+  if (inp) { inp.value = el.textContent; inp.dispatchEvent(new Event('input')); }
+}
+
+function switchTab(btn, tabId) {
+  document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId)?.classList.add('active');
+  if (tabId === 'tab-caption') buildTips();
+}
+
+function selectFont(el, idx) {
+  document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  studioState.font = FONTS[idx];
+  updateCanvas();
+}
+
+function selectColor(el, color) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  studioState.color = color;
+  updateCanvas();
+}
+
+function selectEffect(btn, effect) {
+  document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  studioState.effect = effect;
+  updateCanvas();
+}
+
+function setAlign(btn, align) {
+  document.querySelectorAll('.align-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  studioState.align = align;
+  updateCanvas();
+}
+
+function onStyleChange() {
+  studioState.fontSize = parseInt(document.getElementById('font-size-slider')?.value || 18);
+  updateCanvas();
+}
+
+function selectTemplate(id) {
+  const t = TEMPLATES.find(x => x.id === id);
+  if (!t) return;
+  studioState.template = t;
+  studioState.captionPos = t.captionPos;
+  studioState.captionX = null;
+  studioState.captionY = null;
+  document.querySelectorAll('.tmpl-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('tmpl-' + id)?.classList.add('selected');
+  updateCanvas();
+}
+
+// ── CANVAS UPDATE ─────────────────────────────
+function updateCanvas() {
+  const cap     = document.getElementById('canvas-caption');
+  const overlay = document.getElementById('canvas-template-overlay');
+  const canvas  = document.getElementById('ad-canvas');
+  const price   = document.getElementById('canvas-price');
+  if (!cap) return;
+
+  const t = studioState.template;
+
+  // Caption text styling
+  cap.style.fontFamily = studioState.font.css;
+  cap.style.fontSize   = studioState.fontSize + 'px';
+  cap.style.textAlign  = studioState.align;
+  cap.style.lineHeight = '1.3';
+
+  // Apply effect (remove all first)
+  cap.classList.remove('effect-shimmer','effect-neon','effect-glitter','effect-rainbow','effect-shadow-hard','effect-outline');
+  if (studioState.effect !== 'none') {
+    cap.classList.add('effect-' + studioState.effect);
+  }
+
+  // Color: shimmer/rainbow handle their own color via animation, others use inline
+  if (studioState.effect === 'shimmer' || studioState.effect === 'rainbow') {
+    cap.style.color = '';
+  } else {
+    cap.style.color = studioState.color;
+  }
+
+  // Position: if manually dragged use those coords, else use template preset
+  if (studioState.captionX !== null && studioState.captionY !== null) {
+    cap.style.left   = studioState.captionX + 'px';
+    cap.style.top    = studioState.captionY + 'px';
+    cap.style.bottom = '';
+    cap.style.right  = '';
+    cap.style.transform = '';
+  } else {
+    cap.style.left = cap.style.right = cap.style.top = cap.style.bottom = cap.style.transform = '';
+    const pos = studioState.captionPos;
+    if (pos === 'bottom') {
+      cap.style.bottom = '44px'; cap.style.left = '12px'; cap.style.right = '12px';
+    } else if (pos === 'top') {
+      cap.style.top = '12px'; cap.style.left = '12px'; cap.style.right = '12px';
+    } else {
+      cap.style.top = '50%'; cap.style.left = '12px'; cap.style.right = '12px';
+      cap.style.transform = 'translateY(-50%)';
+    }
+  }
+
+  // Template background + overlay
+  if (t) {
+    canvas.style.background = t.bg;
+    overlay.style.background = t.overlay === 'none' ? '' : t.overlay;
+    if (price) {
+      price.style.background = t.accentColor;
+      price.style.color = t.darkText ? '#111' : '#fff';
+    }
+  } else {
+    canvas.style.background = 'var(--s2)';
+    overlay.style.background = '';
+    if (price) { price.style.background = 'var(--yellow)'; price.style.color = '#111'; }
+  }
+}
+
+// ── DRAGGABLE CAPTION ─────────────────────────
+function initDrag() {
+  const cap    = document.getElementById('canvas-caption');
+  const canvas = document.getElementById('ad-canvas');
+  if (!cap || !canvas) return;
+
+  let dragging = false, startX, startY, origLeft, origTop;
+
+  function getPos(e) {
+    const touch = e.touches ? e.touches[0] : e;
+    return { x: touch.clientX, y: touch.clientY };
+  }
+
+  function onStart(e) {
+    e.preventDefault();
+    const rect   = canvas.getBoundingClientRect();
+    const capRect = cap.getBoundingClientRect();
+    dragging = true;
+    const pos = getPos(e);
+    startX   = pos.x;
+    startY   = pos.y;
+    origLeft = capRect.left - rect.left;
+    origTop  = capRect.top  - rect.top;
+    cap.classList.add('dragging');
+  }
+
+  function onMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    const pos  = getPos(e);
+    const rect = canvas.getBoundingClientRect();
+    let nx = origLeft + (pos.x - startX);
+    let ny = origTop  + (pos.y - startY);
+    // Clamp within canvas
+    nx = Math.max(0, Math.min(nx, rect.width  - cap.offsetWidth));
+    ny = Math.max(0, Math.min(ny, rect.height - cap.offsetHeight));
+    studioState.captionX = nx;
+    studioState.captionY = ny;
+    cap.style.left   = nx + 'px';
+    cap.style.top    = ny + 'px';
+    cap.style.bottom = '';
+    cap.style.right  = '';
+    cap.style.transform = '';
+  }
+
+  function onEnd() {
+    dragging = false;
+    cap.classList.remove('dragging');
+  }
+
+  cap.addEventListener('mousedown',  onStart);
+  cap.addEventListener('touchstart', onStart, { passive:false });
+  document.addEventListener('mousemove',  onMove);
+  document.addEventListener('touchmove',  onMove, { passive:false });
+  document.addEventListener('mouseup',    onEnd);
+  document.addEventListener('touchend',   onEnd);
+}
+
+// ── PRICE ─────────────────────────────────────
+function getPriceRoast(pct) {
+  if (pct === 0)  return '0%? Really? At least try. 😑';
+  if (pct < 20)   return 'Bold move: almost no markup. Too humble. 🥲';
+  if (pct < 40)   return 'A reasonable markup. Boring, but respectable. 😐';
+  if (pct < 60)   return "Now we're talking. That's some confidence. 😤";
+  if (pct < 80)   return 'Risky. You better have a VERY good caption. 🔥';
+  if (pct < 100)  return 'Are you serious?? This better be the ad of the century. 💀';
+  return '100% markup?! CHAOTIC. UNHINGED. We respect it. 👑';
+}
+
+// ── PRODUCTS ──────────────────────────────────
+const GROUPS = [
+  { id:'A', name:'Group A', product:'Chopsticks',  emoji:'🥢', base:1200, color:'#ff4060',
+    img:'https://images.unsplash.com/photo-1577106263724-2c8e03bfe9cf?w=600&q=80' },
+  { id:'B', name:'Group B', product:'Notebook',    emoji:'📓', base:3500, color:'#ffc947',
+    img:'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=600&q=80' },
+  { id:'C', name:'Group C', product:'Socks',       emoji:'🧦', base:3000, color:'#00d48a',
+    img:'https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=600&q=80' },
+  { id:'D', name:'Group D', product:'Eraser',      emoji:'🧹', base:1000, color:'#3d9eff',
+    img:'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&q=80' },
+  { id:'E', name:'Group E', product:'Hand cream',  emoji:'🧴', base:4000, color:'#b97aff',
+    img:'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=80' },
+];
+
+const TECH_LABELS = { scarcity:'⏳ Scarcity', authority:'🏆 Authority', social_proof:'💬 Social Proof' };
+const MEDALS = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+
+// ── STATE ─────────────────────────────────────
+let fb           = null;
+let currentGroup = null;
+let currentName  = null;
+let voterKey     = null;
+let selectedTech = null;
+let myVote       = null;
+let sessionRef   = null;
+let unsubscribe  = null;
+let cachedState  = { phase:'work', ads:{}, votes:{}, members:{} };
+let isAdWriter   = false;
+
+// ── FIREBASE — poll until module loads ────────
+function initFirebase() {
+  fb = window._fb;
+  sessionRef = fb.ref(fb.db, 'session');
+  startListening();
+  console.log('Firebase connected ✓');
+}
+
+(function waitForFb() {
+  if (window._fb) {
+    initFirebase();
+  } else {
+    setTimeout(waitForFb, 50);
+  }
+})();
+
+function startListening() {
+  if (!sessionRef) return;
+  if (unsubscribe) unsubscribe();
+  unsubscribe = fb.onValue(sessionRef, snap => {
+    const data = snap.val() || { phase:'work', ads:{}, votes:{} };
+    cachedState = data;
+    syncView(data);
+    if (document.getElementById('s-teacher').classList.contains('active')) renderTeacher(data);
+  });
+}
+
+async function fbUpdate(path, value) {
+  if (!fb) { showToast('⚠️ Firebase not ready yet'); return; }
+  const r = fb.ref(fb.db, path);
+  await fb.set(r, value);
+}
+
+// ── NAVIGATION ────────────────────────────────
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  // Build studio UI when entering caption screen
+  if (id === 's-caption') {
+    buildStudio();
+    buildTips();
+    updateCanvas();
+    initDrag();
+  }
+}
+
+// ── GROUP GRID ────────────────────────────────
+function buildGroupGrid() {
+  document.getElementById('group-grid').innerHTML = GROUPS.map(g => `
+    <button class="grp-btn" id="gbtn-${g.id}" onclick="selectGroup('${g.id}')">${g.emoji}<span>${g.name}</span></button>`).join('');
+}
+
+let selectedGid = null;
+function selectGroup(id) {
+  selectedGid = id;
+  document.querySelectorAll('.grp-btn').forEach(b => b.classList.remove('sel'));
+  document.getElementById('gbtn-' + id).classList.add('sel');
+  document.getElementById('btn-join').disabled = false;
+}
+
+function joinGroup() {
+  if (!selectedGid) return;
+  currentGroup = GROUPS.find(g => g.id === selectedGid);
+  document.getElementById('name-group-badge').textContent = currentGroup.name.toUpperCase();
+  go('s-name');
+}
+
+// ── NAME ──────────────────────────────────────
+function checkName() {
+  const v = document.getElementById('name-input').value.trim();
+  document.getElementById('btn-name-next').disabled = v.length < 1;
+}
+
+function confirmName() {
+  currentName = document.getElementById('name-input').value.trim();
+  voterKey = currentGroup.id + '_' + currentName.replace(/\s+/g,'_') + '_' + Math.random().toString(36).slice(2,5);
+  const state = cachedState;
+  if (state.ads && state.ads[currentGroup.id]) {
+    if (state.phase === 'vote')    { goToVote();          return; }
+    if (state.phase === 'results') { showResults(state);  return; }
+    showGroupWaiting(); return;
+  }
+  fbUpdate('session/members/' + currentGroup.id + '/' + voterKey, currentName);
+  const members = state.members && state.members[currentGroup.id];
+  const memberCount = members ? Object.keys(members).length : 0;
+  if (memberCount === 0) {
+    isAdWriter = true;
+    setupProductScreen();
+    go('s-product');
+  } else {
+    isAdWriter = false;
+    showGroupWaiting();
+  }
+}
+
+function showGroupWaiting() {
+  const ad = cachedState.ads && cachedState.ads[currentGroup.id];
+  const waitTitle = document.getElementById('wait-title');
+  const waitSub   = document.getElementById('wait-sub');
+  if (ad) {
+    if (waitTitle) waitTitle.textContent = 'Ad submitted!';
+    if (waitSub)   waitSub.textContent   = 'Waiting for teacher to open voting…';
+  } else {
+    if (waitTitle) waitTitle.textContent = 'Your group is working on the ad!';
+    if (waitSub)   waitSub.textContent   = 'Sit together and write the caption. You will vote individually later.';
+  }
+  go('s-waiting');
+}
+
+// ── PRODUCT SCREEN ────────────────────────────
+function setupProductScreen() {
+  const g = currentGroup;
+  document.getElementById('product-group-badge').textContent = g.name.toUpperCase();
+  document.getElementById('product-name-title').textContent  = g.product;
+  const funLines = [
+    'Oh no. Oh no no no.',
+    'This is what you have to work with. Good luck.',
+    'Make it sell. Somehow.',
+    'Somewhere a marketing student is crying.',
+    'Your competitors have iPhones. You have this.',
+  ];
+  document.getElementById('product-tagline').textContent = funLines[Math.floor(Math.random()*funLines.length)] + ' (Base: ' + fmt(g.base) + ')';
+  document.getElementById('product-emoji-big').textContent = g.emoji;
+  document.getElementById('product-base-price').textContent = fmt(g.base);
+
+  // Load product photo
+  const box     = document.getElementById('product-photo-box');
+  const emojiEl = document.getElementById('product-emoji-big');
+  // Remove any previously inserted img
+  box.querySelectorAll('img').forEach(i => i.remove());
+  emojiEl.style.display = 'block';
+
+  if (g.img) {
+    const imgEl  = document.createElement('img');
+    imgEl.src    = g.img;
+    imgEl.alt    = g.product;
+    imgEl.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover';
+    imgEl.onload  = () => { emojiEl.style.display = 'none'; };
+    imgEl.onerror = () => { imgEl.remove(); emojiEl.style.display = 'block'; };
+    box.appendChild(imgEl);
+  }
+
+  // Prep canvas photo area
+  const pa = document.getElementById('canvas-photo-area');
+  const ef = document.getElementById('canvas-emoji-fallback');
+  pa.querySelectorAll('img').forEach(i => i.remove());
+  if (ef) ef.textContent = g.emoji;
+
+  if (g.img) {
+    const ci  = document.createElement('img');
+    ci.src    = g.img;
+    ci.alt    = g.product;
+    ci.onload  = () => { if (ef) ef.style.display = 'none'; };
+    ci.onerror = () => { ci.remove(); if (ef) ef.style.display = 'block'; };
+    pa.insertBefore(ci, pa.firstChild);
+  }
+
+  document.getElementById('price-base-ref').textContent = fmt(g.base);
+  onPriceSlide(0);
+}
+
+// ── TECHNIQUE ─────────────────────────────────
+function pickTech(el, tech) {
+  selectedTech = tech;
+  document.querySelectorAll('.tech-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('btn-tech-next').disabled = false;
+}
+
+// ── CAPTION + PRICE ───────────────────────────
+function onCaptionInput() {
+  const v = document.getElementById('caption-input').value;
+  document.getElementById('char-count').textContent = v.length;
+  const cap = document.getElementById('canvas-caption');
+  if (cap) { cap.textContent = v || 'Your caption will appear here...'; }
+  updateCanvas();
+}
+
+function fmt(n) { return n.toLocaleString('ko-KR') + '₩'; }
+
+function onPriceSlide(val) {
+  const base  = currentGroup ? currentGroup.base : 1200;
+  const pct   = parseInt(val);
+  const price = Math.round(base * (1 + pct / 100));
+  const priceBig = document.getElementById('price-big');
+  if (priceBig) priceBig.textContent = fmt(price);
+  const badge = document.getElementById('price-pct-badge');
+  const cp    = document.getElementById('canvas-price');
+  const roast = document.getElementById('price-roast');
+  if (badge) badge.textContent = '+' + pct + '%';
+  if (cp)    cp.textContent    = fmt(price);
+  if (roast) roast.textContent = getPriceRoast(pct);
+}
+
+// ── SUBMIT AD ─────────────────────────────────
+async function submitAd() {
+  const caption = document.getElementById('caption-input').value.trim();
+  if (!caption)     { showToast('⚠️ Write a caption first!'); return; }
+  if (!selectedTech){ showToast('⚠️ Choose a technique first!'); return; }
+
+  const pct   = parseInt(document.getElementById('price-slider').value);
+  const price = Math.round(currentGroup.base * (1 + pct / 100));
+  const ad = {
+    groupId:   currentGroup.id,
+    groupName: currentGroup.name,
+    product:   currentGroup.product,
+    emoji:     currentGroup.emoji,
+    caption, technique: selectedTech, price, base: currentGroup.base,
+    img: currentGroup.img || null,
+  };
+  await fbUpdate('session/ads/' + currentGroup.id, ad);
+  confetti();
+  go('s-waiting');
+}
+
+// ── VOTE ──────────────────────────────────────
+function goToVote() {
+  const state     = cachedState;
+  const container = document.getElementById('vote-cards');
+  container.innerHTML = '';
+  GROUPS.forEach(g => {
+    const ad = state.ads && state.ads[g.id];
+    if (!ad) return;
+    const isOwn    = currentGroup && g.id === currentGroup.id;
+    const hasVoted = !!myVote;
+    const card = document.createElement('div');
+    card.className = 'vote-card' + (isOwn ? ' own' : '') + (myVote === g.id ? ' voted' : '');
+    card.innerHTML = `
+      <div class="vote-photo">
+        ${ad.img ? `<img src="${ad.img}" alt="${ad.product}" onerror="this.outerHTML='<span style=\\'font-size:3rem\\'>${ad.emoji}</span>'">` : `<span style="font-size:3rem">${ad.emoji}</span>`}
+      </div>
+      <div class="vote-body">
+        <div class="row" style="margin-bottom:10px">
+          <span class="badge badge-muted">${g.name}</span>
+          <span style="font-weight:600;font-size:.9rem">${ad.product}</span>
+        </div>
+        <div class="vote-caption">"${ad.caption}"</div>
+        <div class="vote-foot">
+          <span class="badge badge-yellow">${TECH_LABELS[ad.technique]}</span>
+          <span class="spacer"></span>
+          <span style="font-size:1.1rem;color:var(--green)">${fmt(ad.price)}</span>
+        </div>
+        ${isOwn
+          ? '<div style="text-align:center;color:var(--blue);font-size:.8rem;font-weight:600;margin-top:12px">← Your group\'s ad</div>'
+          : !hasVoted
+            ? `<button class="btn btn-red btn-full" style="margin-top:12px" onclick="castVote('${g.id}')">BUY THIS 👆</button>`
+            : myVote === g.id
+              ? '<div style="text-align:center;color:var(--green);font-size:.85rem;font-weight:600;margin-top:12px">✓ You voted for this!</div>'
+              : ''}
+      </div>`;
+    container.appendChild(card);
+  });
+  go('s-vote');
+}
+
+async function castVote(groupId) {
+  if (myVote) return;
+  myVote = groupId;
+  await fbUpdate('session/votes/' + voterKey, { voter: currentName, groupId });
+  showToast('Vote submitted! 🗳️');
+  go('s-voted');
+}
+
+// ── RESULTS ───────────────────────────────────
+function showResults(state) {
+  state = state || cachedState;
+  const counts = {};
+  GROUPS.forEach(g => counts[g.id] = 0);
+  if (state.votes) Object.values(state.votes).forEach(v => { if (counts[v.groupId] !== undefined) counts[v.groupId]++; });
+  const sorted = GROUPS.filter(g => state.ads && state.ads[g.id])
+    .map(g => ({ ...g, votes: counts[g.id], ad: state.ads[g.id] }))
+    .sort((a,b) => b.votes - a.votes);
+  const maxV = sorted[0]?.votes || 1;
+  const list = document.getElementById('results-list');
+  list.innerHTML = sorted.map((g,i) => `
+    <div class="result-item ${i===0?'gold':''}">
+      <div class="result-rank">${MEDALS[i]}</div>
+      <div style="font-size:1.8rem">${g.emoji}</div>
+      <div class="result-body">
+        <div style="font-weight:600;font-size:.92rem">${g.product} <span class="muted" style="font-size:.78rem">${g.name}</span></div>
+        <div class="result-caption">"${g.ad.caption}"</div>
+        <div class="row" style="gap:6px;margin-top:4px">
+          <span class="badge badge-yellow" style="font-size:.65rem">${TECH_LABELS[g.ad.technique]}</span>
+          <span style="font-size:.78rem;color:var(--green)">${fmt(g.ad.price)}</span>
+          <span style="font-size:.72rem;color:var(--muted)">(base ${fmt(g.ad.base)})</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(g.votes/maxV*100)}%;background:${g.color}"></div></div>
+      </div>
+      <div>
+        <div class="result-votes" style="color:${g.color}">${g.votes}</div>
+        <div style="font-size:.68rem;color:var(--muted);text-align:right">votes</div>
+      </div>
+    </div>`).join('');
+  go('s-results');
+}
+
+// ── SYNC ──────────────────────────────────────
+function syncView(state) {
+  const active = document.querySelector('.screen.active')?.id;
+  if (!active || active==='s-landing'||active==='s-group'||active==='s-name'||active==='s-teacher') return;
+  if (active === 's-waiting') {
+    if (currentGroup && state.ads && state.ads[currentGroup.id]) {
+      const ad  = state.ads[currentGroup.id];
+      const icon  = document.getElementById('wait-icon');
+      const title = document.getElementById('wait-title');
+      const sub   = document.getElementById('wait-sub');
+      const box   = document.getElementById('wait-group-ad');
+      if (icon)  icon.textContent  = '✅';
+      if (title) title.textContent = 'Ad submitted!';
+      if (sub)   sub.textContent   = 'Waiting for teacher to open voting…';
+      if (box) {
+        box.style.display = 'block';
+        document.getElementById('wait-ad-emoji').textContent   = ad.emoji;
+        document.getElementById('wait-ad-caption').textContent = '"' + ad.caption + '"';
+        document.getElementById('wait-ad-tech').textContent    = TECH_LABELS[ad.technique];
+        document.getElementById('wait-ad-price').textContent   = fmt(ad.price);
+      }
+    }
+    if (state.phase === 'vote')    { goToVote();          return; }
+    if (state.phase === 'results') { showResults(state);  return; }
+    return;
+  }
+  if (active==='s-voted' && state.phase==='results') { showResults(state); return; }
+  if (active==='s-vote'  && state.phase==='results') { showResults(state); return; }
+}
+
+// ── TEACHER ───────────────────────────────────
+async function setPhase(phase) {
+  await fbUpdate('session/phase', phase);
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pbtn-' + phase)?.classList.add('active');
+  showToast('Phase: ' + phase + ' ✓');
+}
+
+function renderTeacher(state) {
+  const submitted = Object.keys(state.ads||{}).length;
+  const votes     = Object.keys(state.votes||{}).length;
+  const ts = document.getElementById('t-submitted');
+  const tv = document.getElementById('t-votes');
+  if (ts) ts.innerHTML = submitted + '<span style="font-size:1rem;color:var(--muted)">/5</span>';
+  if (tv) tv.textContent = votes;
+  ['work','vote','results'].forEach(p => {
+    const b = document.getElementById('pbtn-' + p);
+    if (b) b.classList.toggle('active', state.phase === p);
+  });
+  const list = document.getElementById('teacher-ads-list');
+  if (!list) return;
+  if (submitted === 0) { list.innerHTML = '<p class="muted small">No ads submitted yet…</p>'; return; }
+  list.innerHTML = GROUPS.map(g => {
+    const ad = state.ads && state.ads[g.id];
+    if (!ad) return `<div style="display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)"><span>${g.emoji}</span><span class="muted small">${g.name} — waiting…</span></div>`;
+    return `<div style="padding:10px 0;border-bottom:1px solid var(--border)">
+      <div class="row" style="gap:8px;margin-bottom:4px"><span>${g.emoji}</span><strong style="font-size:.87rem">${g.name}</strong><span class="badge badge-green" style="font-size:.65rem">✓ Done</span></div>
+      <div style="font-style:italic;font-size:.79rem;color:var(--muted)">"${ad.caption}"</div>
+      <div style="font-size:.76rem;color:var(--yellow);margin-top:3px">${TECH_LABELS[ad.technique]} · ${fmt(ad.price)}</div>
+    </div>`;
+  }).join('');
+}
+
+async function resetAll() {
+  if (!confirm('Reset everything? This clears all ads and votes.')) return;
+  await fbUpdate('session', { phase:'work', ads:{}, votes:{} });
+  showToast('Session reset ✓');
+}
+
+// ── UTILS ─────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function confetti() {
+  const colors = ['#ff4060','#ffc947','#00d48a','#3d9eff','#b97aff'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const dur = (.6 + Math.random()*.9).toFixed(2) + 's';
+    el.style.cssText = `left:${Math.random()*100}vw;top:0;background:${colors[i%5]};animation-delay:${(Math.random()*.5).toFixed(2)}s;--dur:${dur};border-radius:${Math.random()>.5?'50%':'2px'};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2200);
+  }
+}
+
+// ── INIT ──────────────────────────────────────
+buildGroupGrid();
+initLanding();
+
+setInterval(() => {
+  const active = document.querySelector('.screen.active')?.id;
+  if (active === 's-teacher') renderTeacher(cachedState);
+}, 3000);
+</script>
+</body>
+</html>
