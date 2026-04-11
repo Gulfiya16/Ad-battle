@@ -1,14 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>💀 Buy or Bye</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- v5 -->
 <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Space+Grotesk:wght@400;500;700&family=Bebas+Neue&family=Caveat:wght@700&family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Mono:wght@500&family=Righteous&family=Permanent+Marker&family=Anton&family=Pacifico&display=swap" rel="stylesheet">
 
-<!-- Firebase compat SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -748,71 +751,45 @@ const TIPS={
 
 
 // ── FIREBASE ──────────────────────────────────
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBjSn8Txo-mQiDNk-cdlrfChnUoV33eA2Y",
-  authDomain: "ad-battle-5bdfa.firebaseapp.com",
-  databaseURL: "https://ad-battle-5bdfa-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ad-battle-5bdfa",
-  storageBucket: "ad-battle-5bdfa.firebasestorage.app",
-  messagingSenderId: "210440749157",
-  appId: "1:210440749157:web:8b578aefa0d467ced6468c"
-};
 
 function initFb() {
-  try {
-    firebase.initializeApp(FIREBASE_CONFIG);
-    const _db = firebase.database();
-    // Store db reference and session ref directly
-    fb = {
-      _db,
-      ref: (path) => _db.ref(path),
-      set: (path, val) => _db.ref(path).set(val),
-      onValue: (path, cb) => {
-        const r = _db.ref(path);
-        r.on('value', cb);
-        return () => r.off('value', cb);
-      }
-    };
-    sessionRef = _db.ref('session');
-    startListening();
-    enableTeacherButtons();
-    console.log('✅ Firebase connected');
-  } catch(e) {
-    console.error('Firebase init error:', e);
-    showToast('❌ Firebase failed: ' + e.message);
+  // Wait for Firebase SDK to be available (loaded at bottom of body)
+  if (!window._firebaseDb) {
+    setTimeout(initFb, 100);
+    return;
   }
-}
-
-window.addEventListener('load', initFb);
-function startListening(){
-  if(!sessionRef) return;
-  if(unsubscribe) unsubscribe();
-  // Direct Firebase compat API — sessionRef is a database.ref()
-  const handler = snap => {
+  _dbRef = window._firebaseDb.ref('session');
+  // Real-time listener
+  _dbRef.on('value', function(snap) {
     const state = snap.val() || { phase:'work', ads:{}, votes:{}, members:{} };
     cachedState = state;
-    if(document.getElementById('s-teacher')?.classList.contains('active')){
+    fb = true;
+    if (document.getElementById('s-teacher')?.classList.contains('active')) {
       renderTeacher(state);
     }
     syncView(state);
-  };
-  sessionRef.on('value', handler);
-  unsubscribe = () => sessionRef.off('value', handler);
+  });
+  fb = true;
+  enableTeacherButtons();
+  console.log('✅ Firebase connected');
 }
+
 async function fbSet(path, val) {
-  if (!fb) {
-    showToast('⚠️ Still connecting... wait 2 sec');
-    console.warn('fbSet called but fb not ready');
-    return;
-  }
+  if (!window._firebaseDb) { showToast('⚠️ Not connected yet'); return; }
   try {
-    await fb.set(path, val);
+    await window._firebaseDb.ref(path).set(val);
     console.log('✅ wrote:', path);
   } catch(e) {
     console.error('fbSet error:', e);
-    showToast('❌ DB error: ' + e.message);
+    showToast('❌ Write failed: ' + e.message);
   }
 }
+
+window.addEventListener('load', function() {
+  setTimeout(initFb, 300);
+});
+
+
 
 // ── LANDING ───────────────────────────────────
 const BRAND_WORDS=['JUST DO IT','THINK DIFFERENT',"I'M LOVIN' IT","BECAUSE YOU'RE WORTH IT",'IMPOSSIBLE IS NOTHING','HAVE IT YOUR WAY','TASTE THE FEELING','GOT MILK?',"FINGER LICKIN' GOOD",'OPEN HAPPINESS','DIAMONDS ARE FOREVER','ONCE YOU POP','MELTS IN YOUR MOUTH','DO THE DEW','BE ALL YOU CAN BE',"MAYBE SHE'S BORN WITH IT",'THE REAL THING','RED BULL GIVES YOU WINGS'];
@@ -887,26 +864,76 @@ function buildGroupGrid(){
 }
 let selGid=null;
 function selGroup(id){selGid=id;document.querySelectorAll('.grp-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('gbtn-'+id).classList.add('sel');document.getElementById('btn-join').disabled=false;}
-function joinGroup(){if(!selGid)return;currentGroup=GROUPS.find(g=>g.id===selGid);document.getElementById('name-badge').textContent=currentGroup.name.toUpperCase();go('s-name');}
+function joinGroup(){
+  if(!selGid)return;
+  // Reset all per-student state when starting fresh
+  myVote=null; voterKey=null; currentName=null; selectedTech=null; isAdWriter=false;
+  currentGroup=GROUPS.find(g=>g.id===selGid);
+  document.getElementById('name-badge').textContent=currentGroup.name.toUpperCase();
+  // Clear name input
+  const ni=document.getElementById('name-inp'); if(ni) ni.value='';
+  document.getElementById('btn-name').disabled=true;
+  go('s-name');
+}
 
 // ── NAME ──────────────────────────────────────
 function checkName(){document.getElementById('btn-name').disabled=document.getElementById('name-inp').value.trim().length<1;}
 async function confirmName(){
+  // Reset per-student state — critical if same tablet used by multiple students
+  myVote = null;
   currentName=document.getElementById('name-inp').value.trim();
   voterKey=currentGroup.id+'_'+currentName.replace(/\s+/g,'_')+'_'+Math.random().toString(36).slice(2,5);
-  const state=cachedState;
-  if(state.ads&&state.ads[currentGroup.id]){
-    if(state.phase==='vote'){buildShelf();go('s-vote');return;}
-    if(state.phase==='results'){showResults(state);return;}
-    showGroupWaiting();return;
+
+  // Always read FRESH from Firebase — not cached — so member count is accurate
+  let freshState = cachedState;
+  try {
+    const snap = await window._firebaseDb.ref('session').once('value');
+    freshState = snap.val() || { phase:'work', ads:{}, votes:{}, members:{} };
+    cachedState = freshState; // update cache too
+  } catch(e) { console.warn('Fresh read failed, using cache'); }
+
+  // Check phase first
+  if(freshState.ads && freshState.ads[currentGroup.id]){
+    if(freshState.phase==='vote'){
+      if(!myVote && freshState.votes && freshState.votes[voterKey]){
+        myVote = freshState.votes[voterKey].groupId;
+      }
+      buildShelf(); go('s-vote'); return;
+    }
+    if(freshState.phase==='results'){ showResults(freshState); return; }
+    showGroupWaiting(); return;
   }
-  await fbSet('session/members/'+currentGroup.id+'/'+voterKey,currentName);
-  const members=state.members&&state.members[currentGroup.id];
-  const cnt=members?Object.keys(members).length:0;
-  if(cnt===0){isAdWriter=true;setupProduct();go('s-product');}
-  else{isAdWriter=false;showGroupWaiting();}
+
+  // If voting is open — ALL students go to vote, no matter what
+  if(freshState.phase === 'vote'){
+    if(!myVote && freshState.votes && freshState.votes[voterKey]){
+      myVote = freshState.votes[voterKey].groupId;
+    }
+    buildShelf(); go('s-vote'); return;
+  }
+
+  // If results are showing
+  if(freshState.phase === 'results'){ showResults(freshState); return; }
+
+  // Phase is 'work' and no ad yet — check member count
+  const existingMembers = freshState.members && freshState.members[currentGroup.id];
+  const cnt = existingMembers ? Object.keys(existingMembers).length : 0;
+
+  await fbSet('session/members/'+currentGroup.id+'/'+voterKey, currentName);
+
+  if(cnt === 0){
+    isAdWriter = true;
+    setupProduct();
+    go('s-product');
+  } else {
+    isAdWriter = false;
+    showGroupWaiting();
+  }
 }
 function showGroupWaiting(){
+  // If voting is already open, skip the waiting screen entirely
+  if(cachedState.phase==='vote'){ buildShelf(); go('s-vote'); return; }
+  if(cachedState.phase==='results'){ showResults(cachedState); return; }
   const ad=cachedState.ads&&cachedState.ads[currentGroup.id];
   document.getElementById('wait-icon').textContent=ad?'✅':'⏳';
   document.getElementById('wait-title').textContent=ad?'Ad submitted!':'Your group is writing the ad!';
@@ -1119,6 +1146,11 @@ async function submitAd(){
 function buildShelf(){
   const state=cachedState,row=document.getElementById('shelf-row');
   if(!row)return;row.innerHTML='';
+  // Restore myVote from Firebase if this student already voted
+  // (handles page refresh, or coming back after submitting)
+  if(!myVote && voterKey && state.votes && state.votes[voterKey]){
+    myVote = state.votes[voterKey].groupId;
+  }
   GROUPS.forEach(g=>{
     const ad=state.ads&&state.ads[g.id];
     const isOwn=currentGroup&&g.id===currentGroup.id;
@@ -1253,12 +1285,28 @@ function syncView(state){
       const box=document.getElementById('wait-ad-box');
       if(box){box.style.display='block';document.getElementById('wait-ad-emoji').textContent=ad.emoji||'';document.getElementById('wait-ad-cap').textContent='"'+ad.caption+'"';document.getElementById('wait-ad-tech').textContent=TECH_LABELS[ad.technique]||'';document.getElementById('wait-ad-price').textContent=fmt(ad.price);}
     }
-    if(state.phase==='vote'){buildShelf();go('s-vote');}
+    if(state.phase==='vote'){
+      if(!myVote && voterKey && state.votes && state.votes[voterKey]){
+        myVote = state.votes[voterKey].groupId;
+      }
+      buildShelf();go('s-vote');
+    }
     if(state.phase==='results')showResults(state);
     return;
   }
-  if(active==='s-vote'){buildShelf();if(state.phase==='results')showResults(state);return;}
-  if(active==='s-voted'&&state.phase==='results'){showResults(state);return;}
+  if(active==='s-vote'){
+    // Restore vote state from server before building shelf
+    if(!myVote && voterKey && state.votes && state.votes[voterKey]){
+      myVote = state.votes[voterKey].groupId;
+    }
+    buildShelf();
+    if(state.phase==='results')showResults(state);
+    return;
+  }
+  if(active==='s-voted'){
+    if(state.phase==='results'){showResults(state);return;}
+    if(state.phase==='vote' && !myVote){ buildShelf(); go('s-vote'); return; }
+  }
 }
 
 // ── TEACHER ───────────────────────────────────
@@ -1296,7 +1344,16 @@ function renderTeacher(state){
     return`<div style="padding:9px 0;border-bottom:1px solid var(--border)"><div class="row" style="gap:7px;margin-bottom:3px"><span>${g.emoji}</span><strong style="font-size:.86rem">${g.name}</strong><span class="badge b-g" style="font-size:.62rem">✓ Done</span></div><div style="font-style:italic;font-size:.77rem;color:var(--muted)">"${ad.caption}"</div><div style="font-size:.74rem;color:var(--yellow);margin-top:2px">${TECH_LABELS[ad.technique]} · ${fmt(ad.price)}</div></div>`;
   }).join('');
 }
-async function resetAll(){if(!confirm('Reset everything? Clears all ads and votes.'))return;await fbSet('session',{phase:'work',ads:{},votes:{},members:{}});showToast('Session reset ✓');renderTeacher({phase:'work',ads:{},votes:{},members:{}});}
+async function resetAll(){
+  if(!confirm('Reset everything?')) return;
+  await fbSet('session', {phase:'work',ads:{},votes:{},members:{}});
+  cachedState = {phase:'work',ads:{},votes:{},members:{}};
+  // Clear all local session state too
+  myVote = null; voterKey = null; currentGroup = null;
+  currentName = null; selectedTech = null; isAdWriter = false;
+  showToast('Session reset ✓');
+  renderTeacher(cachedState);
+}
 
 // ── UTILS ─────────────────────────────────────
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
@@ -1319,6 +1376,29 @@ function go(id) {
 }
 buildGroupGrid();
 initLanding();
+</script>
+
+<!-- Firebase SDK loaded at end of body so DOM is ready -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+(function() {
+  try {
+    var app = firebase.initializeApp({
+      apiKey: "AIzaSyBjSn8Txo-mQiDNk-cdlrfChnUoV33eA2Y",
+      authDomain: "ad-battle-5bdfa.firebaseapp.com",
+      databaseURL: "https://ad-battle-5bdfa-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "ad-battle-5bdfa",
+      storageBucket: "ad-battle-5bdfa.firebasestorage.app",
+      messagingSenderId: "210440749157",
+      appId: "1:210440749157:web:8b578aefa0d467ced6468c"
+    });
+    window._firebaseDb = firebase.database(app);
+    console.log('✅ Firebase SDK loaded');
+  } catch(e) {
+    console.error('Firebase SDK error:', e);
+  }
+})();
 </script>
 </body>
 </html>
