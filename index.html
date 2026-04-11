@@ -1,185 +1,243 @@
-<script>
-// ── SAFE FIREBASE INIT ───────────────────────
-let fb = null;
-let sessionRef = null;
-let unsubscribe = null;
-let cachedState = { phase:'work', ads:{}, votes:{}, members:{} };
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad Game</title>
 
-(function waitForFb() {
-  if (window._fb) {
-    fb = window._fb;
-    sessionRef = fb.ref(fb.db, 'session');
-    startListening();
-    console.log('Firebase connected ✓');
-  } else {
-    setTimeout(waitForFb, 50);
-  }
-})();
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter&display=swap" rel="stylesheet">
 
-// ── SAFE LISTENER (NO CRASHES) ───────────────
-function startListening() {
-  if (!sessionRef) return;
-
-  if (unsubscribe) unsubscribe();
-
-  unsubscribe = fb.onValue(sessionRef, snap => {
-    const data = snap.val() || { phase:'work', ads:{}, votes:{}, members:{} };
-    cachedState = data;
-
-    // Always update teacher safely
-    renderTeacherSafe(data);
-
-    // Sync student view safely
-    syncViewSafe(data);
-  });
+<style>
+body {
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:#111;
+  color:#fff;
 }
 
-// ── SAFE FIREBASE UPDATE ─────────────────────
-async function fbUpdate(path, value) {
-  if (!fb) return;
+.screen { display:none; padding:20px; }
+.screen.active { display:block; }
 
-  const r = fb.ref(fb.db, path);
-
-  if (typeof value === 'object' && !Array.isArray(value)) {
-    await fb.update(r, value);
-  } else {
-    await fb.set(r, value);
-  }
+/* Buttons */
+button {
+  padding:10px 14px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-// ── TEACHER PHASE CONTROL ────────────────────
-async function setPhase(phase) {
-  await fbUpdate('session/phase', phase);
-  showToast('Phase: ' + phase + ' ✓');
+/* Magazine */
+.magazine {
+  background:#fff;
+  color:#111;
+  border-radius:14px;
+  padding:16px;
+  max-width:400px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  font-family:'Playfair Display',serif;
 }
 
-// ── FIXED RESET ──────────────────────────────
-async function resetAll() {
-  if (!confirm('Reset everything?')) return;
-
-  await fb.set(fb.ref(fb.db, 'session'), {
-    phase: 'work',
-    ads: {},
-    votes: {},
-    members: {}
-  });
-
-  showToast('Session reset ✓');
+.mag-header input {
+  width:100%;
+  font-size:1.4rem;
+  border:none;
+  border-bottom:2px solid #ddd;
+  outline:none;
 }
 
-// ── SAFE TEACHER RENDER (NO CRASH) ───────────
-function renderTeacherSafe(state) {
-  const ts = document.getElementById('t-submitted');
-  const tv = document.getElementById('t-votes');
-  const list = document.getElementById('teacher-ads-list');
+.mag-body textarea {
+  width:100%;
+  height:120px;
+  border:none;
+  outline:none;
+}
 
-  if (!ts || !tv || !list) return; // ← prevents crash
+.mag-footer {
+  display:flex;
+  justify-content:space-between;
+}
 
-  const submitted = Object.keys(state.ads || {}).length;
-  const votes = Object.keys(state.votes || {}).length;
+/* Bookshelf */
+.bookshelf {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:12px;
+}
 
-  ts.innerHTML = submitted + '<span style="font-size:1rem;color:gray">/5</span>';
-  tv.textContent = votes;
+.book {
+  background:linear-gradient(135deg,#ffb347,#ffcc33);
+  color:#222;
+  padding:10px;
+  border-radius:8px;
+  cursor:pointer;
+}
 
-  ['work','vote','results'].forEach(p => {
-    const btn = document.getElementById('pbtn-' + p);
-    if (btn) btn.classList.toggle('active', state.phase === p);
-  });
+/* Results */
+.result-card {
+  display:flex;
+  gap:10px;
+  padding:10px;
+  border-bottom:1px solid #333;
+}
+.rank { color:gold; font-weight:bold; }
+</style>
+</head>
 
-  if (submitted === 0) {
-    list.innerHTML = '<p>No ads yet…</p>';
-    return;
-  }
+<body>
 
-  list.innerHTML = Object.values(state.ads).map(ad => `
-    <div style="padding:8px;border-bottom:1px solid #333">
-      <strong>${ad.groupName}</strong><br>
-      <span style="font-size:.85rem">"${ad.caption}"</span><br>
-      <span style="color:gold">${ad.price}₩</span>
+<!-- STUDENT -->
+<div id="s-ad" class="screen active">
+  <h2>Create Ad</h2>
+  <div class="magazine">
+    <input id="ad-title" placeholder="Brand name">
+    <textarea id="ad-caption" placeholder="Write your ad"></textarea>
+    <div class="mag-footer">
+      <input id="ad-price" type="number" placeholder="₩">
+      <button onclick="submitAd()">Publish</button>
     </div>
-  `).join('');
+  </div>
+</div>
+
+<div id="s-wait" class="screen">
+  <h2>Waiting...</h2>
+</div>
+
+<div id="s-vote" class="screen">
+  <h2>Vote</h2>
+  <div id="vote-cards" class="bookshelf"></div>
+</div>
+
+<div id="s-results" class="screen">
+  <h2>Results</h2>
+  <div id="results"></div>
+</div>
+
+<!-- TEACHER -->
+<div id="s-teacher" class="screen">
+  <h2>Teacher Panel</h2>
+  <button onclick="setPhase('work')">Work</button>
+  <button onclick="setPhase('vote')">Vote</button>
+  <button onclick="setPhase('results')">Results</button>
+  <button onclick="resetAll()">Reset</button>
+</div>
+
+<script type="module">
+// 🔥 PUT YOUR FIREBASE CONFIG HERE
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  // your config
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let state = { phase:'work', ads:{}, votes:{} };
+const sessionRef = ref(db,'session');
+
+onValue(sessionRef, snap=>{
+  state = snap.val() || state;
+  sync();
+});
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-// ── SAFE VIEW SYNC ───────────────────────────
-function syncViewSafe(state) {
-  const active = document.querySelector('.screen.active')?.id;
-  if (!active) return;
+function setPhase(p){
+  update(sessionRef,{phase:p});
+}
 
-  if (active === 's-waiting') {
-    if (state.phase === 'vote') goToVoteSafe();
-    if (state.phase === 'results') showResultsSafe(state);
+function resetAll(){
+  set(sessionRef,{phase:'work',ads:{},votes:{}});
+}
+
+// STUDENT ID
+const user = localStorage.user || (localStorage.user=Math.random().toString(36).slice(2));
+const group = Math.floor(Math.random()*5); // simple grouping
+
+function submitAd(){
+  const ad={
+    groupId:group,
+    groupName:'Group '+group,
+    caption:document.getElementById('ad-caption').value,
+    price:document.getElementById('ad-price').value
+  };
+  update(ref(db,'session/ads/'+group),ad);
+  go('s-wait');
+}
+
+function sync(){
+  if(state.phase==='work'){
+    if(state.ads && state.ads[group]){
+      go('s-wait');
+    } else {
+      go('s-ad');
+    }
   }
 
-  if (active === 's-vote' && state.phase === 'results') {
-    showResultsSafe(state);
+  if(state.phase==='vote'){
+    buildVote();
+    go('s-vote');
+  }
+
+  if(state.phase==='results'){
+    showResults();
+    go('s-results');
   }
 }
 
-// ── SAFE VOTE ────────────────────────────────
-function goToVoteSafe() {
-  const container = document.getElementById('vote-cards');
-  if (!container) return;
+function buildVote(){
+  const container=document.getElementById('vote-cards');
+  container.innerHTML='';
 
-  container.innerHTML = '';
-
-  Object.values(cachedState.ads || {}).forEach(ad => {
-    const el = document.createElement('div');
-    el.innerHTML = `
-      <div style="border:1px solid #444;padding:10px;margin-bottom:10px">
+  Object.values(state.ads||{})
+    .filter(ad=>ad.groupId!==group)
+    .forEach(ad=>{
+      const el=document.createElement('div');
+      el.className='book';
+      el.innerHTML=`
         <strong>${ad.groupName}</strong><br>
-        "${ad.caption}"<br>
-        <span style="color:lime">${ad.price}₩</span><br>
-        <button onclick="castVoteSafe('${ad.groupId}')">BUY</button>
+        ${ad.caption}<br>
+        ${ad.price}₩
+      `;
+      el.onclick=()=>vote(ad.groupId);
+      container.appendChild(el);
+    });
+}
+
+function vote(gid){
+  update(ref(db,'session/votes/'+user),{groupId:gid});
+}
+
+function showResults(){
+  const counts={};
+  Object.values(state.votes||{}).forEach(v=>{
+    counts[v.groupId]=(counts[v.groupId]||0)+1;
+  });
+
+  const res=Object.values(state.ads||{}).map(a=>({
+    ...a,
+    votes:counts[a.groupId]||0
+  })).sort((a,b)=>b.votes-a.votes);
+
+  document.getElementById('results').innerHTML =
+    res.map((r,i)=>`
+      <div class="result-card">
+        <div class="rank">#${i+1}</div>
+        <div>${r.groupName} - ${r.votes} votes</div>
       </div>
-    `;
-    container.appendChild(el);
-  });
-
-  go('s-vote');
-}
-
-async function castVoteSafe(groupId) {
-  if (!window.voterKey) return;
-
-  await fbUpdate('session/votes/' + voterKey, {
-    groupId
-  });
-
-  go('s-voted');
-}
-
-// ── SAFE RESULTS ─────────────────────────────
-function showResultsSafe(state) {
-  const list = document.getElementById('results-list');
-  if (!list) return;
-
-  const counts = {};
-
-  Object.values(state.votes || {}).forEach(v => {
-    counts[v.groupId] = (counts[v.groupId] || 0) + 1;
-  });
-
-  const results = Object.values(state.ads || {}).map(ad => ({
-    ...ad,
-    votes: counts[ad.groupId] || 0
-  })).sort((a,b) => b.votes - a.votes);
-
-  list.innerHTML = results.map(r => `
-    <div style="padding:10px;border-bottom:1px solid #333">
-      <strong>${r.groupName}</strong> — ${r.votes} votes<br>
-      "${r.caption}"
-    </div>
-  `).join('');
-
-  go('s-results');
-}
-
-// ── UTIL ─────────────────────────────────────
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+    `).join('');
 }
 </script>
+
+</body>
+</html>
+```
